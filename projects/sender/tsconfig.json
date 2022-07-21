@@ -1,0 +1,12 @@
+{
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"rootDirs": [
+			"src",
+			"../shared/src"
+		],
+		"lib": [
+			"ES2020"
+		],
+	}
+}

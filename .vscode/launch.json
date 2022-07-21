@@ -6,71 +6,71 @@
 	"version": "0.2.0",
 	"configurations": [
 		/* 
-		Main Extension
+		sender Extension
 		*/
 		{
-			"name": "Run Main Extension",
+			"name": "Run sender Extension",
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/projects/main"
+				"--extensionDevelopmentPath=${workspaceFolder}/projects/sender"
 			],
 			"outFiles": [
-				"${workspaceFolder}/projects/main/dist/**/*.js"
+				"${workspaceFolder}/projects/sender/dist/**/*.js"
 			],
-			"preLaunchTask": "tasks: watch-main"
+			"preLaunchTask": "tasks: watch-sender"
 		},
 		/* 
-		Main Extension Tests
+		sender Extension Tests
 		*/
 		{
 			"name": "Extension Tests",
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/projects/main",
-				"--extensionTestsPath=${workspaceFolder}/projects/main/out/test/suite/index"
+				"--extensionDevelopmentPath=${workspaceFolder}/projects/sender",
+				"--extensionTestsPath=${workspaceFolder}/projects/sender/out/test/suite/index"
 			],
 			"outFiles": [
-				"${workspaceFolder}/projects/main/out/**/*.js",
-				"${workspaceFolder}/projects/main/dist/**/*.js"
+				"${workspaceFolder}/projects/sender/out/**/*.js",
+				"${workspaceFolder}/projects/sender/dist/**/*.js"
 			],
 			"preLaunchTask": "tasks: watch-tests"
 		},
 		/* 
-		Web Extension
+		receiver Extension
 		*/
 		{
-			"name": "Run Web Extension ",
+			"name": "Run receiver Extension ",
 			"type": "extensionHost",
 			"debugWebWorkerHost": true,
 			"request": "launch",
 			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/projects/web",
-				"--extensionDevelopmentKind=web"
+				"--extensionDevelopmentPath=${workspaceFolder}/projects/receiver",
+				"--extensionDevelopmentKind=receiver"
 			],
 			"outFiles": [
-				"${workspaceFolder}/projects/web/dist/web/**/*.js"
+				"${workspaceFolder}/projects/receiver/dist/receiver/**/*.js"
 			],
-			"preLaunchTask": "tasks: watch-web"
+			"preLaunchTask": "tasks: watch-receiver"
 		},
 		/* 
-		Web Extension Tests
+		receiver Extension Tests
 		*/
 		{
-			"name": "Web Extension Tests",
+			"name": "receiver Extension Tests",
 			"type": "extensionHost",
 			"debugWebWorkerHost": true,
 			"request": "launch",
 			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/projects/web",
-				"--extensionDevelopmentKind=web",
-				"--extensionTestsPath=${workspaceFolder}/projects/web/dist/web/test/suite/index"
+				"--extensionDevelopmentPath=${workspaceFolder}/projects/receiver",
+				"--extensionDevelopmentKind=receiver",
+				"--extensionTestsPath=${workspaceFolder}/projects/receiver/dist/receiver/test/suite/index"
 			],
 			"outFiles": [
-				"${workspaceFolder}/projects/web/dist/web/**/*.js"
+				"${workspaceFolder}/projects/receiver/dist/receiver/**/*.js"
 			],
-			"preLaunchTask": "npm: watch-web"
+			"preLaunchTask": "npm: watch-receiver"
 		}
 	]
 }
