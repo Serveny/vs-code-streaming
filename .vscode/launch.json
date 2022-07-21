@@ -1,0 +1,76 @@
+// A launch configuration that compiles the extension and then opens it inside a new window
+// Use IntelliSense to learn about possible attributes.
+// Hover to view descriptions of existing attributes.
+// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+{
+	"version": "0.2.0",
+	"configurations": [
+		/* 
+		Main Extension
+		*/
+		{
+			"name": "Run Main Extension",
+			"type": "extensionHost",
+			"request": "launch",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}/projects/main"
+			],
+			"outFiles": [
+				"${workspaceFolder}/projects/main/dist/**/*.js"
+			],
+			"preLaunchTask": "tasks: watch-main"
+		},
+		/* 
+		Main Extension Tests
+		*/
+		{
+			"name": "Extension Tests",
+			"type": "extensionHost",
+			"request": "launch",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}/projects/main",
+				"--extensionTestsPath=${workspaceFolder}/projects/main/out/test/suite/index"
+			],
+			"outFiles": [
+				"${workspaceFolder}/projects/main/out/**/*.js",
+				"${workspaceFolder}/projects/main/dist/**/*.js"
+			],
+			"preLaunchTask": "tasks: watch-tests"
+		},
+		/* 
+		Web Extension
+		*/
+		{
+			"name": "Run Web Extension ",
+			"type": "extensionHost",
+			"debugWebWorkerHost": true,
+			"request": "launch",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}/projects/web",
+				"--extensionDevelopmentKind=web"
+			],
+			"outFiles": [
+				"${workspaceFolder}/projects/web/dist/web/**/*.js"
+			],
+			"preLaunchTask": "tasks: watch-web"
+		},
+		/* 
+		Web Extension Tests
+		*/
+		{
+			"name": "Web Extension Tests",
+			"type": "extensionHost",
+			"debugWebWorkerHost": true,
+			"request": "launch",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}/projects/web",
+				"--extensionDevelopmentKind=web",
+				"--extensionTestsPath=${workspaceFolder}/projects/web/dist/web/test/suite/index"
+			],
+			"outFiles": [
+				"${workspaceFolder}/projects/web/dist/web/**/*.js"
+			],
+			"preLaunchTask": "npm: watch-web"
+		}
+	]
+}
