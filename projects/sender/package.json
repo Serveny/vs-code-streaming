@@ -10,7 +10,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:vs-code-streaming.startCodeStreaming"
+    "onCommand:vs-code-streaming.startCodeStreaming",
+    "onCommand:vs-code-streaming.stopCodeStreaming"
   ],
   "main": "./dist/extension.js",
   "contributes": {

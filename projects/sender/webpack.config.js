@@ -49,9 +49,6 @@ const extensionConfig = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: '../web/dist/web/extension.js', to: 'vs-code-streaming-web/dist/web/extension.js' },
-        { from: '../web/package.json', to: 'vs-code-streaming-web/package.json' },
-        { from: '../web/package.nls.json', to: 'vs-code-streaming-web/package.nls.json' },
         { from: './src/index.html', to: 'index.html' },
         { from: './src/product.json', to: 'product.json' },
         { from: '../../node_modules/vscode-web', to: 'node_modules/vscode-web' },
