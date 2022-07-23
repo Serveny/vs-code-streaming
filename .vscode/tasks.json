@@ -3,6 +3,7 @@
 {
 	"version": "2.0.0",
 	"tasks": [
+		// Sender watch
 		{
 			"label": "tasks: sender-watch",
 			"type": "npm",
@@ -19,10 +20,24 @@
 			},
 			"dependsOn": "tasks: receiver-watch"
 		},
+		// Receiver watch
 		{
 			"label": "tasks: receiver-watch",
 			"type": "npm",
 			"script": "receiver-watch",
+			"group": "build",
+			"isBackground": true,
+			"problemMatcher": [
+				"$ts-webpack-watch",
+				"$tslint-webpack-watch"
+			],
+			"dependsOn": "tasks: clean-dist"
+		},
+		// Clean dist
+		{
+			"label": "tasks: clean-dist",
+			"type": "npm",
+			"script": "clean-dist",
 			"group": "build",
 			"isBackground": true,
 			"problemMatcher": [

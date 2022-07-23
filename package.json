@@ -33,14 +33,15 @@
     "fs-extra": "10.1.0"
   },
   "scripts": {
-    "sender-vscode:prepublish": "cd ./projects/sender && npm run package",
+    "sender-vscode:prepublish": "cd ./projects/sender && npm run sender-package",
     "sender-compile": "cd ./projects/sender && webpack",
     "sender-watch": "cd ./projects/sender && webpack --watch",
     "sender-package": "cd ./projects/sender && webpack --mode production --devtool hidden-source-map",
-    "receiver-vscode:prepublish": "cd ./projects/receiver && npm run package-receiver",
+    "receiver-vscode:prepublish": "cd ./projects/receiver && npm run receiver-package",
     "receiver-compile": "cd ./projects/receiver && webpack",
     "receiver-watch": "cd ./projects/receiver && webpack --watch",
     "receiver-package": "cd ./projects/receiver && webpack --mode production --devtool hidden-source-map",
-    "lint": "eslint src --ext ts"
+    "lint": "eslint src --ext ts",
+    "clean-dist": "rimraf ./projects/sender/dist && rimraf ./projects/receiver/dist"
   }
 }
