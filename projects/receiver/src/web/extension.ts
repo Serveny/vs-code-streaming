@@ -1,20 +1,27 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode'
+import { commands, ExtensionContext, TextDocument, TextDocumentContentProvider, Uri, window, workspace } from 'vscode'
 import { Message, Messages, MessagesDict, TextOpenEvent } from '../../../shared/src/socket-message'
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: ExtensionContext) {
   const socket = new WebSocket('ws://localhost:1870')
   socket.onmessage = msg => handle(msg.data)
-  vscode.workspace.registerTextDocumentContentProvider(scheme, textProvider)
+  workspace.registerTextDocumentContentProvider(scheme, textProvider)
+  closeAllDocs()
+}
+
+async function closeAllDocs() {
+  workspace.textDocuments.forEach(td => closeDoc(td))
+}
+
+async function closeDoc(td: TextDocument) {
+  await window.showTextDocument(td, { preview: true, preserveFocus: false })
+  await commands.executeCommand('workbench.action.closeActiveEditor')
+  await workspace.fs.delete(td.uri)
 }
 
 const scheme = 'vscode-streaming-extension'
-const textProvider = new (class implements vscode.TextDocumentContentProvider {
+const textProvider = new (class implements TextDocumentContentProvider {
   private content: string = ''
-  provideTextDocumentContent = (uri: vscode.Uri): string => this.content
+  provideTextDocumentContent = (uri: Uri): string => this.content
   setContent = (str: string) => (this.content = str)
 })()
 
@@ -30,9 +37,8 @@ function handle(json: string) {
 
 async function openDocument(ev: TextOpenEvent) {
   //textProvider.setContent(ev.content)
-  let doc = await vscode.workspace.openTextDocument({ content: ev.content, language: ev.languageId }) // calls back into the provider
-  await vscode.window.showTextDocument(doc, { preview: false })
+  let doc = await workspace.openTextDocument({ content: ev.content, language: ev.languageId }) // calls back into the provider
+  await window.showTextDocument(doc, { preview: false })
 }
 
-// this method is called when your extension is deactivated
 export function deactivate() {}

@@ -59,9 +59,9 @@ const webExtensionConfig = {
     }),
     new CopyPlugin({
       patterns: [
-        { from: './dist/web/extension.js', to: '../receiver/dist/vs-code-streaming-web/dist/web/extension.js' },
-        { from: './package.json', to: '../receiver/dist/vs-code-streaming-web/package.json' },
-        { from: './package.nls.json', to: '../receiver/dist/vs-code-streaming-web/package.nls.json' },
+        { from: './dist/web/extension.js', to: '../sender/dist/vs-code-streaming-web/dist/web/extension.js' },
+        { from: './package.json', to: '../sender/dist/vs-code-streaming-web/package.json' },
+        { from: './package.nls.json', to: '../sender/dist/vs-code-streaming-web/package.nls.json' },
       ],
     }),
   ],

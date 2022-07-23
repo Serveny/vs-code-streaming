@@ -21,23 +21,6 @@
 			"preLaunchTask": "tasks: watch-sender"
 		},
 		/* 
-		sender Extension Tests
-		*/
-		{
-			"name": "Extension Tests",
-			"type": "extensionHost",
-			"request": "launch",
-			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/projects/sender",
-				"--extensionTestsPath=${workspaceFolder}/projects/sender/out/test/suite/index"
-			],
-			"outFiles": [
-				"${workspaceFolder}/projects/sender/out/**/*.js",
-				"${workspaceFolder}/projects/sender/dist/**/*.js"
-			],
-			"preLaunchTask": "tasks: watch-tests"
-		},
-		/* 
 		receiver Extension
 		*/
 		{
@@ -54,23 +37,5 @@
 			],
 			"preLaunchTask": "tasks: watch-receiver"
 		},
-		/* 
-		receiver Extension Tests
-		*/
-		{
-			"name": "receiver Extension Tests",
-			"type": "extensionHost",
-			"debugWebWorkerHost": true,
-			"request": "launch",
-			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/projects/receiver",
-				"--extensionDevelopmentKind=receiver",
-				"--extensionTestsPath=${workspaceFolder}/projects/receiver/dist/receiver/test/suite/index"
-			],
-			"outFiles": [
-				"${workspaceFolder}/projects/receiver/dist/receiver/**/*.js"
-			],
-			"preLaunchTask": "npm: watch-receiver"
-		}
 	]
 }

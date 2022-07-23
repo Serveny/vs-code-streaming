@@ -21,26 +21,6 @@
 			"dependsOn": "tasks: watch-receiver"
 		},
 		{
-			"type": "npm",
-			"script": "watch-tests",
-			"problemMatcher": "$tsc-watch",
-			"isBackground": true,
-			"presentation": {
-				"reveal": "never",
-				"group": "watchers"
-			},
-			"group": "build",
-			"path": "./projects/sender"
-		},
-		{
-			"label": "tasks: watch-tests",
-			"dependsOn": [
-				"npm: watch",
-				"npm: watch-tests"
-			],
-			"problemMatcher": [],
-		},
-		{
 			"label": "tasks: compile-web",
 			"type": "npm",
 			"script": "compile-web",
