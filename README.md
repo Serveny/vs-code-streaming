@@ -1,6 +1,5 @@
 # vs-code-streaming README
-
-This is the README for your extension "vs-code-streaming". After writing up a brief description, we recommend including the following sections.
+VS Code extension to display the code in a seperate window that can be used as a browser source for streaming software. This allows a display specifically adapted to the stream without having to change the display for the programmer/streamer.
 
 ## Features
 
