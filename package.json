@@ -16,6 +16,7 @@
     "@vscode/test-electron": "^2.1.5",
     "copy-webpack-plugin": "^11.0.0",
     "eslint": "^8.20.0",
+    "event-hooks-webpack-plugin": "^2.2.0",
     "glob": "^8.0.3",
     "mocha": "^10.0.0",
     "prettier": "^2.7.1",
@@ -28,6 +29,18 @@
   "dependencies": {
     "express": "^4.18.1",
     "express-ws": "^5.0.2",
-    "vscode-web": "^1.69.2"
+    "vscode-web": "^1.69.2",
+    "fs-extra": "10.1.0"
+  },
+  "scripts": {
+    "sender-vscode:prepublish": "cd ./projects/sender && npm run package",
+    "sender-compile": "cd ./projects/sender && webpack",
+    "sender-watch": "cd ./projects/sender && webpack --watch",
+    "sender-package": "cd ./projects/sender && webpack --mode production --devtool hidden-source-map",
+    "receiver-vscode:prepublish": "cd ./projects/receiver && npm run package-receiver",
+    "receiver-compile": "cd ./projects/receiver && webpack",
+    "receiver-watch": "cd ./projects/receiver && webpack --watch",
+    "receiver-package": "cd ./projects/receiver && webpack --mode production --devtool hidden-source-map",
+    "lint": "eslint src --ext ts"
   }
 }

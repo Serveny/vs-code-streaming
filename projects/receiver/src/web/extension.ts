@@ -9,10 +9,12 @@ export function activate(context: ExtensionContext) {
 }
 
 async function closeAllDocs() {
+  console.log('close docs: ', workspace.textDocuments)
   workspace.textDocuments.forEach(td => closeDoc(td))
 }
 
 async function closeDoc(td: TextDocument) {
+  console.log('close: ', td)
   await window.showTextDocument(td, { preview: true, preserveFocus: false })
   await commands.executeCommand('workbench.action.closeActiveEditor')
   await workspace.fs.delete(td.uri)
@@ -36,8 +38,7 @@ function handle(json: string) {
 }
 
 async function openDocument(ev: TextOpenEvent) {
-  //textProvider.setContent(ev.content)
-  let doc = await workspace.openTextDocument({ content: ev.content, language: ev.languageId }) // calls back into the provider
+  let doc = await workspace.openTextDocument({ content: ev.content, language: ev.languageId })
   await window.showTextDocument(doc, { preview: false })
 }
 

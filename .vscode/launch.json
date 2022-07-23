@@ -18,7 +18,7 @@
 			"outFiles": [
 				"${workspaceFolder}/projects/sender/dist/**/*.js"
 			],
-			"preLaunchTask": "tasks: watch-sender"
+			"preLaunchTask": "tasks: sender-watch"
 		},
 		/* 
 		receiver Extension
@@ -35,7 +35,7 @@
 			"outFiles": [
 				"${workspaceFolder}/projects/receiver/dist/receiver/**/*.js"
 			],
-			"preLaunchTask": "tasks: watch-receiver"
+			"preLaunchTask": "tasks: receiver-watch"
 		},
 	]
 }

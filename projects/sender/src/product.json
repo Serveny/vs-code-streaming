@@ -12,7 +12,6 @@
     },
     "extensionEnabledApiProposals": {
       "vscode.vscode-web-playground": [
-        "fileSearchProvider",
         "textSearchProvider"
       ]
     }
@@ -20,7 +19,7 @@
   "additionalBuiltinExtensions": [
     {
       "scheme": "http",
-      "path": "./vs-code-streaming-web"
+      "path": "./receiver"
     }
   ]
 }

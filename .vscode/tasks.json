@@ -4,9 +4,9 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "tasks: watch-sender",
+			"label": "tasks: sender-watch",
 			"type": "npm",
-			"script": "watch",
+			"script": "sender-watch",
 			"problemMatcher": "$ts-webpack-watch",
 			"isBackground": true,
 			"presentation": {
@@ -17,34 +17,18 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"path": "./projects/sender",
-			"dependsOn": "tasks: watch-receiver"
+			"dependsOn": "tasks: receiver-watch"
 		},
 		{
-			"label": "tasks: compile-web",
+			"label": "tasks: receiver-watch",
 			"type": "npm",
-			"script": "compile-web",
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-			"problemMatcher": [
-				"$ts-webpack",
-				"$tslint-webpack"
-			],
-			"path": "./projects/web"
-		},
-		{
-			"label": "tasks: watch-receiver",
-			"type": "npm",
-			"script": "watch-receiver",
+			"script": "receiver-watch",
 			"group": "build",
 			"isBackground": true,
 			"problemMatcher": [
 				"$ts-webpack-watch",
 				"$tslint-webpack-watch"
 			],
-			"path": "./projects/receiver"
 		}
 	]
 }

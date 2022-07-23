@@ -19,22 +19,22 @@
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="manifest" href="/manifest.json" />
   <link data-name="vs/workbench/workbench.web.main" rel="stylesheet"
-    href="./node_modules/vscode-web/dist/out/vs/workbench/workbench.web.main.css">
+    href="./vscode-web/dist/out/vs/workbench/workbench.web.main.css">
 </head>
 
 <body aria-label=""></body>
 
 <!-- Startup (do not modify order of script tags!) -->
-<script src="./node_modules/vscode-web/dist/out/vs/loader.js"></script>
-<script src="./node_modules/vscode-web/dist/out/vs/webPackagePaths.js"></script>
+<script src="./vscode-web/dist/out/vs/loader.js"></script>
+<script src="./vscode-web/dist/out/vs/webPackagePaths.js"></script>
 <script>
   Object.keys(self.webPackagePaths).map(function (key, index) {
     self.webPackagePaths[
       key
-    ] = `${window.location.origin}/node_modules/vscode-web/dist/node_modules/${key}/${self.webPackagePaths[key]}`;
+    ] = `${window.location.origin}/vscode-web/dist/node_modules/${key}/${self.webPackagePaths[key]}`;
   });
   require.config({
-    baseUrl: `${window.location.origin}/node_modules/vscode-web/dist/out`,
+    baseUrl: `${window.location.origin}/vscode-web/dist/out`,
     recordStats: true,
     trustedTypesPolicy: window.trustedTypes?.createPolicy('amdLoader', {
       createScriptURL(value) {
@@ -44,8 +44,8 @@
     paths: self.webPackagePaths,
   });
 </script>
-<script src="./node_modules/vscode-web/dist/out/vs/workbench/workbench.web.main.nls.js"></script>
-<script src="./node_modules/vscode-web/dist/out/vs/workbench/workbench.web.main.js"></script>
-<script src="./node_modules/vscode-web/dist/out/vs/code/browser/workbench/workbench.js"></script>
+<script src="./vscode-web/dist/out/vs/workbench/workbench.web.main.nls.js"></script>
+<script src="./vscode-web/dist/out/vs/workbench/workbench.web.main.js"></script>
+<script src="./vscode-web/dist/out/vs/code/browser/workbench/workbench.js"></script>
 
 </html>

@@ -1,12 +1,11 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
 //@ts-check
 'use strict'
 
 const CopyPlugin = require('copy-webpack-plugin')
+const EventHooksPlugin = require('event-hooks-webpack-plugin')
+const { CallbackTask } = require('event-hooks-webpack-plugin/lib/tasks')
+const fs = require('fs-extra')
+
 //@ts-check
 /** @typedef {import('webpack').Configuration} WebpackConfig **/
 
@@ -19,7 +18,6 @@ const webExtensionConfig = {
   target: 'webworker', // extensions run in a webworker context
   entry: {
     extension: './src/web/extension.ts',
-    'test/suite/index': './src/web/test/suite/index.ts',
   },
   output: {
     filename: '[name].js',
@@ -57,12 +55,13 @@ const webExtensionConfig = {
     new webpack.ProvidePlugin({
       process: 'process/browser', // provide a shim for the global `process` variable
     }),
-    new CopyPlugin({
-      patterns: [
-        { from: './dist/web/extension.js', to: '../sender/dist/vs-code-streaming-web/dist/web/extension.js' },
-        { from: './package.json', to: '../sender/dist/vs-code-streaming-web/package.json' },
-        { from: './package.nls.json', to: '../sender/dist/vs-code-streaming-web/package.nls.json' },
-      ],
+    // @ts-ignore
+    new EventHooksPlugin({
+      done: () => {
+        fs.copy('./dist/web/extension.js', '../sender/dist/receiver/dist/web/extension.js')
+        fs.copy('./package.json', '../sender/dist/receiver/package.json')
+        fs.copy('./package.nls.json', '../sender/dist/receiver/package.nls.json')
+      },
     }),
   ],
   externals: {
