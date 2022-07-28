@@ -5,6 +5,9 @@
 
 const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
+const EventHooksPlugin = require('event-hooks-webpack-plugin')
+const { exec } = require('child_process')
+const fs = require('fs-extra')
 
 //@ts-check
 /** @typedef {import('webpack').Configuration} WebpackConfig **/
@@ -44,13 +47,23 @@ const extensionConfig = {
     level: 'log', // enables logging required for problem matchers
   },
   plugins: [
-    new CopyPlugin({
-      patterns: [
-        { from: './src/index.html', to: 'index.html' },
-        { from: './src/product.json', to: 'product.json' },
-        { from: '../../node_modules/vscode-web', to: 'vscode-web' },
-      ],
+    // @ts-ignore
+    new EventHooksPlugin({
+      beforeCompile: () => {
+        exec('cd ../../node_modules/vscode-web/dist/ && npm i', () => {
+          fs.copy('./src/index.html', './dist/index.html')
+          fs.copy('./src/product.json', './dist/product.json')
+          fs.copy('../../node_modules/vscode-web', './dist/vscode-web')
+        })
+      },
     }),
+    //new CopyPlugin({
+    //patterns: [
+    //{ from: './src/index.html', to: 'index.html' },
+    //{ from: './src/product.json', to: 'product.json' },
+    //{ from: '../../node_modules/vscode-web', to: 'vscode-web' },
+    //],
+    //}),
   ],
 }
 module.exports = [extensionConfig]

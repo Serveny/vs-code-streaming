@@ -1,4 +1,4 @@
-import { TextDocument, workspace } from 'vscode'
+import { TextDocument, TextDocumentChangeEvent, workspace } from 'vscode'
 import { WebSocket } from 'ws'
 import { IMessage, Messages } from '../../shared/src/socket-message'
 
@@ -19,6 +19,14 @@ export function registerEvents(ws: WebSocket) {
       })
   }
 
+  function onChangeText(ev: TextDocumentChangeEvent) {
+    send({
+      name: 'textChange',
+      data: ev.contentChanges as any,
+    })
+  }
+
   console.log('registerEvents')
   workspace.onDidOpenTextDocument(onOpenText)
+  workspace.onDidChangeTextDocument(onChangeText)
 }

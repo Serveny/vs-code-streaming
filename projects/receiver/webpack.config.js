@@ -1,9 +1,7 @@
 //@ts-check
 'use strict'
 
-const CopyPlugin = require('copy-webpack-plugin')
 const EventHooksPlugin = require('event-hooks-webpack-plugin')
-const { CallbackTask } = require('event-hooks-webpack-plugin/lib/tasks')
 const fs = require('fs-extra')
 
 //@ts-check

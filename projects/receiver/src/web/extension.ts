@@ -1,4 +1,5 @@
-import { commands, ExtensionContext, TextDocument, TextDocumentContentProvider, Uri, window, workspace } from 'vscode'
+import { stringify } from 'querystring'
+import { commands, ExtensionContext, Position, Range, TextDocument, TextDocumentContentChangeEvent, TextDocumentContentProvider, TextEditor, Uri, window, workspace } from 'vscode'
 import { Message, Messages, MessagesDict, TextOpenEvent } from '../../../shared/src/socket-message'
 
 export function activate(context: ExtensionContext) {
@@ -29,6 +30,7 @@ const textProvider = new (class implements TextDocumentContentProvider {
 
 const handlers: MessagesDict = {
   openDoc: new Message(openDocument),
+  textChange: new Message(onChangeText),
 }
 
 function handle(json: string) {
@@ -40,6 +42,24 @@ function handle(json: string) {
 async function openDocument(ev: TextOpenEvent) {
   let doc = await workspace.openTextDocument({ content: ev.content, language: ev.languageId })
   await window.showTextDocument(doc, { preview: false })
+}
+
+function changeText(editor: TextEditor, change: TextDocumentContentChangeEvent): Thenable<boolean> {
+  let range = change.range as any
+  range = new Range(range[0], range[1])
+  return editor?.edit(eb => {
+    if (change.text === '') eb.delete(range)
+    else eb.replace(range, change.text)
+  })
+}
+
+async function onChangeText(ev: TextDocumentContentChangeEvent[]) {
+  const editor = window.activeTextEditor
+  if (editor == null) return
+
+  for (const change of ev) {
+    await changeText(editor, change)
+  }
 }
 
 export function deactivate() {}

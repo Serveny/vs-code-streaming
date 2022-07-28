@@ -1,3 +1,5 @@
+import { TextDocumentContentChangeEvent } from 'vscode'
+
 export class Message<T> {
   constructor(private handler: (arg: T) => void) {}
 
@@ -13,6 +15,7 @@ export interface TextOpenEvent {
 
 export interface Messages {
   openDoc: TextOpenEvent
+  textChange: TextDocumentContentChangeEvent[]
 }
 
 export type MessagesDict = { [K in keyof Messages]: Message<Messages[K]> }
