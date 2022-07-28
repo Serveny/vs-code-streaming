@@ -1,5 +1,19 @@
 import { stringify } from 'querystring'
-import { commands, ExtensionContext, Position, Range, TextDocument, TextDocumentContentChangeEvent, TextDocumentContentProvider, TextEditor, Uri, window, workspace } from 'vscode'
+import {
+  commands,
+  ExtensionContext,
+  Position,
+  Range,
+  Selection,
+  TextDocument,
+  TextDocumentContentChangeEvent,
+  TextDocumentContentProvider,
+  TextEditor,
+  TextEditorRevealType,
+  Uri,
+  window,
+  workspace,
+} from 'vscode'
 import { Message, Messages, MessagesDict, TextOpenEvent } from '../../../shared/src/socket-message'
 
 export function activate(context: ExtensionContext) {
@@ -29,8 +43,9 @@ const textProvider = new (class implements TextDocumentContentProvider {
 })()
 
 const handlers: MessagesDict = {
-  openDoc: new Message(openDocument),
+  openDoc: new Message(onOpenDocument),
   textChange: new Message(onChangeText),
+  cursorChange: new Message(onCursorChange),
 }
 
 function handle(json: string) {
@@ -39,7 +54,7 @@ function handle(json: string) {
   handlers[name].invoke(msg.data)
 }
 
-async function openDocument(ev: TextOpenEvent) {
+async function onOpenDocument(ev: TextOpenEvent) {
   let doc = await workspace.openTextDocument({ content: ev.content, language: ev.languageId })
   await window.showTextDocument(doc, { preview: false })
 }
@@ -47,7 +62,7 @@ async function openDocument(ev: TextOpenEvent) {
 function changeText(editor: TextEditor, change: TextDocumentContentChangeEvent): Thenable<boolean> {
   let range = change.range as any
   range = new Range(range[0], range[1])
-  return editor?.edit(eb => {
+  return editor.edit(eb => {
     if (change.text === '') eb.delete(range)
     else eb.replace(range, change.text)
   })
@@ -56,10 +71,18 @@ function changeText(editor: TextEditor, change: TextDocumentContentChangeEvent):
 async function onChangeText(ev: TextDocumentContentChangeEvent[]) {
   const editor = window.activeTextEditor
   if (editor == null) return
+  for (const change of ev) await changeText(editor, change)
+}
 
-  for (const change of ev) {
-    await changeText(editor, change)
-  }
+function setSelection(editor: TextEditor, sel: Selection) {
+  editor.selection = new Selection(sel.anchor, sel.active)
+  editor.revealRange(new Range(editor.selection.start, editor.selection.end), TextEditorRevealType.InCenter)
+}
+
+function onCursorChange(ev: Selection[]) {
+  const editor = window.activeTextEditor
+  if (editor == null) return
+  for (const sel of ev) setSelection(editor, sel)
 }
 
 export function deactivate() {}
