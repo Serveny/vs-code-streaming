@@ -1,10 +1,10 @@
-import { ExtensionContext, commands, window } from 'vscode'
+import { ExtensionContext, window } from 'vscode'
 import { WsServer } from './ws-server'
 import { registerEvents } from './ev-register'
 
 export function activate(context: ExtensionContext) {
-  // context.subscriptions.push(commands.registerCommand('vs-code-streaming.startCodeStreaming', () => start()))
   start()
+  // context.subscriptions.push(commands.registerCommand('vs-code-streaming.startCodeStreaming', () => start()))
 }
 
 function start() {
