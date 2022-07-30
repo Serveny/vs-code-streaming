@@ -1,4 +1,4 @@
-import { commands, Range, Selection, TextDocument, TextDocumentContentChangeEvent, TextEditor, TextEditorRevealType, window, workspace } from 'vscode'
+import { commands, Position, Range, Selection, TextDocument, TextDocumentContentChangeEvent, TextEditor, TextEditorRevealType, window, workspace } from 'vscode'
 
 export function changeText(editor: TextEditor, change: TextDocumentContentChangeEvent): Thenable<boolean> {
   let range = change.range as any
@@ -17,4 +17,17 @@ export function setSelection(editor: TextEditor, sel: Selection) {
 export async function closeDoc(td: TextDocument) {
   await window.showTextDocument(td, { preview: false })
   await commands.executeCommand('workbench.action.closeActiveEditor')
+}
+
+export async function showDoc(content: string, langId: string) {
+  let doc = window.activeTextEditor?.document
+  if (doc?.languageId !== langId) doc = findDoc(langId) ?? (await workspace.openTextDocument({ content: langId, language: langId }))
+  await window.showTextDocument(doc, { preview: false })
+  window.activeTextEditor?.edit(te => {
+    te.insert(new Position(0, 0), content)
+  })
+}
+
+function findDoc(langId: string): TextDocument | undefined {
+  return workspace.textDocuments.find(doc => doc.languageId === langId)
 }

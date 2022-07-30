@@ -33,8 +33,22 @@ export function registerEvents(ws: WebSocket) {
     })
   }
 
+  function onCloseDoc() {
+    const activeDoc = window.activeTextEditor?.document
+    if (activeDoc) onOpenText(activeDoc)
+    else send({ name: 'clear', data: undefined })
+  }
+
+  function openActiveDoc() {
+    const doc = window.activeTextEditor?.document
+    if (doc) onOpenText(doc)
+  }
+
   console.log('registerEvents')
   workspace.onDidOpenTextDocument(onOpenText)
   workspace.onDidChangeTextDocument(onChangeText)
+  workspace.onDidCloseTextDocument(onCloseDoc)
   window.onDidChangeTextEditorSelection(onCursorChange)
+
+  openActiveDoc()
 }

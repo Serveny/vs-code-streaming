@@ -17,6 +17,7 @@ export interface Messages {
   openDoc: TextOpenEvent
   textChange: TextDocumentContentChangeEvent[]
   cursorChange: Selection[]
+  clear: void
 }
 
 export type MessagesDict = { [K in keyof Messages]: Message<Messages[K]> }
