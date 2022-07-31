@@ -4,6 +4,12 @@ VS Code extension to display the code in a seperate window that can be used as a
 
 ![VS Code Streaming Demo](images/demo-animation.gif)
 
+## Why?
+I like to program on a big screen with very little font size, so that I can as much as possible from the file I'm working on. But for a stream viewer this is nearly impossible to read, because of the streaming resolution and sometimes the distance to the screen. I tried to zoom in OBS, but then it becomes blurry very quickly and I often coded offscreen.
+
+## How?
+The idea is to use a seperate VS Code web instance and sync it with your real VS Code. You can configure the web instance how you want your viewers to see the code. The extension starts a local webserver (http://localhost:1870/), which you can access with any modern browser, or a browser source in any streaming software.
+
 ## Features
 
 - Cursor synchronization
@@ -11,18 +17,13 @@ VS Code extension to display the code in a seperate window that can be used as a
 - Cursor focusation
 - Selection synchronization
 
-
-
 ## Requirements
 
-To run this, you need just VS Code and any streaming software, which can run a browser window.
+To run this, you need just VS Code and any streaming software, which can show a browser source.
 
 ## Extension Settings
 
 // TODO
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
 
 This extension contributes the following settings:
 
@@ -31,6 +32,7 @@ This extension contributes the following settings:
 
 ## Known Issues
 
-- No Text decoration sync (At the moment not possible, because there is no way to get them over the vscode extension api)
+- No Text decoration sync (At the moment not possible, because there is no way to get them over the vscode extension api. At least I do not know of any solution)
+- Cursor doesn't show, if you interacted with the web instance. Just reload the browser source/window and it should work again.
 
 **Enjoy!**
