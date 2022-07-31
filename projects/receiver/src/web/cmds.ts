@@ -1,8 +1,11 @@
 import { commands, Position, Range, Selection, TextDocument, TextDocumentContentChangeEvent, TextEditor, TextEditorRevealType, window, workspace } from 'vscode'
 
+export function newRange(rangeArr: any): Range {
+  return new Range(rangeArr[0], rangeArr[1])
+}
+
 export function changeText(editor: TextEditor, change: TextDocumentContentChangeEvent): Thenable<boolean> {
-  let range = change.range as any
-  range = new Range(range[0], range[1])
+  const range = newRange(change.range)
   return editor.edit(eb => {
     if (change.text === '') eb.delete(range)
     else eb.replace(range, change.text)
@@ -14,14 +17,15 @@ export function setSelection(editor: TextEditor, sel: Selection) {
   editor.revealRange(new Range(editor.selection.start, editor.selection.end), TextEditorRevealType.InCenter)
 }
 
-export async function closeDoc(td: TextDocument) {
-  await window.showTextDocument(td, { preview: false })
+export async function closeDoc() {
+  // await window.showTextDocument(td, { preview: false })
+  clearDoc()
   await commands.executeCommand('workbench.action.closeActiveEditor')
 }
 
 export async function showDoc(content: string, langId: string) {
   let doc = window.activeTextEditor?.document
-  if (doc?.languageId !== langId) doc = findDoc(langId) ?? (await workspace.openTextDocument({ content: langId, language: langId }))
+  if (doc?.languageId !== langId) doc = findDoc(langId) ?? (await workspace.openTextDocument({ content: '', language: langId }))
   await window.showTextDocument(doc, { preview: false })
   window.activeTextEditor?.edit(te => {
     te.insert(new Position(0, 0), content)
@@ -30,4 +34,9 @@ export async function showDoc(content: string, langId: string) {
 
 function findDoc(langId: string): TextDocument | undefined {
   return workspace.textDocuments.find(doc => doc.languageId === langId)
+}
+
+export async function clearDoc(): Promise<void> {
+  const editor = window.activeTextEditor
+  if (editor) await editor.edit(edit => edit.delete(new Range(new Position(0, 0), new Position(editor.document.lineCount + 1, 0))))
 }
