@@ -1,4 +1,4 @@
-import { DiagnosticChangeEvent, languages, TextDocument, TextDocumentChangeEvent, TextEditorSelectionChangeEvent, window, workspace } from 'vscode'
+import { DiagnosticChangeEvent, extensions, languages, Position, TextDocument, TextDocumentChangeEvent, TextEditorSelectionChangeEvent, window, workspace } from 'vscode'
 import { WebSocket } from 'ws'
 import { IMessage, Messages } from '../../shared/src/socket-message'
 
@@ -51,6 +51,7 @@ export function registerEvents(ws: WebSocket) {
 
   function onChangeDiagnostic(ev: DiagnosticChangeEvent) {
     const activePath = window.activeTextEditor?.document.uri.path
+
     if (activePath && ev.uris.map(uri => uri.path).includes(activePath)) {
       const diags = languages.getDiagnostics().find(diag => diag[0].path == activePath)
       if (diags)

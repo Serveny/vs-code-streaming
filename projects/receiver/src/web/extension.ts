@@ -1,12 +1,22 @@
 import { Diagnostic, DiagnosticSeverity, ExtensionContext, languages, Selection, TextDocumentContentChangeEvent, TextDocumentContentProvider, Uri, window, workspace } from 'vscode'
 import { Message, Messages, MessagesDict, TextOpenEvent } from '../../../shared/src/socket-message'
-import { changeText, clearDoc, closeDoc, newRange, setSelection, showDoc } from './cmds'
+import { changeText, clearDoc, newRange, setSelection, showDoc } from './cmds'
+import { createDecorations } from './decorations'
 
 export function activate(context: ExtensionContext) {
   let socket = new WebSocket('ws://localhost:1870')
   socket.onmessage = msg => handle(msg.data)
+  openSocketConnection()
   workspace.registerTextDocumentContentProvider(scheme, textProvider)
   if (!window.activeTextEditor) showDoc('', '')
+}
+
+function openSocketConnection() {
+  console.log('Open WebSocket Connection')
+  const socket = new WebSocket('ws://localhost:1870')
+  socket.onmessage = msg => handle(msg.data)
+  const openCon = () => setTimeout(() => openSocketConnection(), 1000)
+  socket.onclose = openCon
 }
 
 const scheme = 'vscode-streaming-extension'
@@ -16,7 +26,6 @@ const textProvider = new (class implements TextDocumentContentProvider {
   setContent = (str: string) => (this.content = str)
 })()
 const diagsColl = languages.createDiagnosticCollection('vscode-streaming-diags')
-
 const handlers: MessagesDict = {
   openDoc: new Message(onOpenDocument),
   textChange: new Message(onChangeText),
@@ -56,6 +65,7 @@ function onChangeDiagnostics(ev: Diagnostic[]) {
       diag.severity = DiagnosticSeverity[diag.severity] as any
     })
     diagsColl.set(editor.document.uri, ev)
+    createDecorations(editor, ev)
   }
 }
 
