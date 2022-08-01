@@ -1,11 +1,12 @@
-import { Diagnostic, ExtensionContext, languages, Selection, TextDocumentContentChangeEvent, TextDocumentContentProvider, Uri, window, workspace } from 'vscode'
+import { Diagnostic, DiagnosticSeverity, ExtensionContext, languages, Selection, TextDocumentContentChangeEvent, TextDocumentContentProvider, Uri, window, workspace } from 'vscode'
 import { Message, Messages, MessagesDict, TextOpenEvent } from '../../../shared/src/socket-message'
-import { changeText, clearDoc, setSelection, showDoc } from './cmds'
+import { changeText, clearDoc, closeDoc, newRange, setSelection, showDoc } from './cmds'
 
 export function activate(context: ExtensionContext) {
   let socket = new WebSocket('ws://localhost:1870')
   socket.onmessage = msg => handle(msg.data)
   workspace.registerTextDocumentContentProvider(scheme, textProvider)
+  if (!window.activeTextEditor) showDoc('', '')
 }
 
 const scheme = 'vscode-streaming-extension'
@@ -14,12 +15,13 @@ const textProvider = new (class implements TextDocumentContentProvider {
   provideTextDocumentContent = (uri: Uri): string => this.content
   setContent = (str: string) => (this.content = str)
 })()
+const diagsColl = languages.createDiagnosticCollection('vscode-streaming-diags')
 
 const handlers: MessagesDict = {
   openDoc: new Message(onOpenDocument),
   textChange: new Message(onChangeText),
   selectionChange: new Message(onChangeSelection),
-  clear: new Message(clearDoc),
+  closeDoc: new Message(clearDoc),
   diagnosticsChange: new Message(onChangeDiagnostics),
 }
 
@@ -32,6 +34,7 @@ function handle(json: string) {
 async function onOpenDocument(ev: TextOpenEvent) {
   await clearDoc()
   await showDoc(ev.content, ev.languageId)
+  onChangeDiagnostics(ev.diagnostics)
 }
 
 async function onChangeText(ev: TextDocumentContentChangeEvent[]) {
@@ -45,9 +48,15 @@ function onChangeSelection(ev: Selection[]) {
 }
 
 function onChangeDiagnostics(ev: Diagnostic[]) {
-  console.log(ev)
   const editor = window.activeTextEditor
-  if (editor) languages.createDiagnosticCollection('diags').set(editor.document.uri, ev)
+
+  if (editor) {
+    ev.forEach(diag => {
+      diag.range = newRange(diag.range)
+      diag.severity = DiagnosticSeverity[diag.severity] as any
+    })
+    diagsColl.set(editor.document.uri, ev)
+  }
 }
 
 export function deactivate() {}

@@ -24,6 +24,7 @@ export function registerEvents(ws: WebSocket) {
         data: {
           content: ev.getText(),
           languageId: ev.languageId,
+          diagnostics: languages.getDiagnostics(ev.uri),
         },
       })
   }
@@ -38,7 +39,7 @@ export function registerEvents(ws: WebSocket) {
   function onCloseDoc() {
     const activeDoc = window.activeTextEditor?.document
     if (activeDoc) onOpenText(activeDoc)
-    else send({ name: 'clear', data: undefined })
+    else send({ name: 'closeDoc', data: undefined })
   }
 
   function onCursorChange(ev: TextEditorSelectionChangeEvent) {

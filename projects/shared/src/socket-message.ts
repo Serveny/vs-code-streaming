@@ -11,13 +11,14 @@ export class Message<T> {
 export interface TextOpenEvent {
   content: string
   languageId: string
+  diagnostics: Diagnostic[]
 }
 
 export interface Messages {
   openDoc: TextOpenEvent
   textChange: TextDocumentContentChangeEvent[]
   selectionChange: Selection[]
-  clear: void
+  closeDoc: void
   diagnosticsChange: Diagnostic[]
 }
 

@@ -18,25 +18,22 @@ export function setSelection(editor: TextEditor, sel: Selection) {
 }
 
 export async function closeDoc() {
-  // await window.showTextDocument(td, { preview: false })
-  clearDoc()
-  await commands.executeCommand('workbench.action.closeActiveEditor')
+  if (await clearDoc()) await commands.executeCommand('workbench.action.closeActiveEditor')
 }
 
 export async function showDoc(content: string, langId: string) {
   let doc = window.activeTextEditor?.document
   if (doc?.languageId !== langId) doc = findDoc(langId) ?? (await workspace.openTextDocument({ content: '', language: langId }))
   await window.showTextDocument(doc, { preview: false })
-  window.activeTextEditor?.edit(te => {
-    te.insert(new Position(0, 0), content)
-  })
+  window.activeTextEditor?.edit(te => te.insert(new Position(0, 0), content))
 }
 
 function findDoc(langId: string): TextDocument | undefined {
   return workspace.textDocuments.find(doc => doc.languageId === langId)
 }
 
-export async function clearDoc(): Promise<void> {
+export async function clearDoc(): Promise<TextEditor | undefined> {
   const editor = window.activeTextEditor
   if (editor) await editor.edit(edit => edit.delete(new Range(new Position(0, 0), new Position(editor.document.lineCount + 1, 0))))
+  return editor
 }
