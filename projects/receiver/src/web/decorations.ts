@@ -22,9 +22,9 @@ function decorationRenderOptions(background: string, color: string): DecorationR
 }
 
 const decorationTypeError = window.createTextEditorDecorationType(decorationRenderOptions('#e454541b', '#ff6464'))
-const decorationTypeWarning = window.createTextEditorDecorationType(decorationRenderOptions('#e454541b', '#ff6464'))
-const decorationTypeInfo = window.createTextEditorDecorationType(decorationRenderOptions('#FFFFFF', '#FFFFFF'))
-const decorationTypeHint = window.createTextEditorDecorationType(decorationRenderOptions('#FFFFFF', '#FFFFFF'))
+const decorationTypeWarning = window.createTextEditorDecorationType(decorationRenderOptions('#ff942f1b', '#fa973a'))
+const decorationTypeInfo = window.createTextEditorDecorationType(decorationRenderOptions('#00b7e420', '#00b7e4'))
+const decorationTypeHint = window.createTextEditorDecorationType(decorationRenderOptions('#17a2a220', '#2faf64'))
 
 export function createDecorations(editor: TextEditor, diags: Diagnostic[]) {
   const decorationOptionsError: DecorationOptions[] = []
