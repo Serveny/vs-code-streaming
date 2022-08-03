@@ -8,9 +8,10 @@ export function newRange(rangeArr: any): Range {
 
 export function changeText(editor: TextEditor, change: TextDocumentContentChangeEvent): Thenable<boolean> {
   const range = newRange(change.range)
+
   return editor.edit(eb => {
-    if (change.text === '') eb.delete(range)
-    else eb.insert(range.start, change.text)
+    eb.delete(range)
+    if (change.text !== '') eb.insert(range.start, change.text)
   })
 }
 
@@ -21,9 +22,7 @@ export function setSelection(editor: TextEditor, sel: Selection) {
 
 export async function closeDoc() {
   const editor = await clearDoc()
-  if (editor) {
-    await commands.executeCommand('workbench.action.closeActiveEditor')
-  }
+  if (editor) await commands.executeCommand('workbench.action.closeActiveEditor')
 }
 
 export async function closeAllDocs() {
