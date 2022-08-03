@@ -8,7 +8,7 @@ export function changeText(editor: TextEditor, change: TextDocumentContentChange
   const range = newRange(change.range)
   return editor.edit(eb => {
     if (change.text === '') eb.delete(range)
-    else eb.replace(range, change.text)
+    else eb.insert(range.start, change.text)
   })
 }
 
@@ -18,14 +18,29 @@ export function setSelection(editor: TextEditor, sel: Selection) {
 }
 
 export async function closeDoc() {
-  if (await clearDoc()) await commands.executeCommand('workbench.action.closeActiveEditor')
+  const editor = await clearDoc()
+  console.log('CLOSE EDITOR: ', editor)
+  if (editor) {
+    await commands.executeCommand('workbench.action.closeActiveEditor')
+  }
+}
+
+export async function closeAllDocs() {
+  for (const td of workspace.textDocuments) {
+    await window.showTextDocument(td.uri, { preview: true, preserveFocus: false })
+    await closeDoc()
+  }
 }
 
 export async function showDoc(content: string, langId: string) {
-  let doc = window.activeTextEditor?.document
-  if (doc?.languageId !== langId) doc = findDoc(langId) ?? (await workspace.openTextDocument({ content: '', language: langId }))
-  await window.showTextDocument(doc, { preview: false })
-  window.activeTextEditor?.edit(te => te.insert(new Position(0, 0), content))
+  let doc = (await clearDoc())?.document
+  if (doc?.languageId !== langId) {
+    await closeDoc()
+    // doc = findDoc(langId) ?? (await workspace.openTextDocument({ content: '', language: langId }))
+    doc = await workspace.openTextDocument({ content: '', language: langId })
+    await window.showTextDocument(doc, { preview: false })
+    await window.activeTextEditor?.edit(te => te.insert(new Position(0, 0), content))
+  } else await window.activeTextEditor?.edit(te => te.insert(new Position(0, 0), content))
 }
 
 function findDoc(langId: string): TextDocument | undefined {

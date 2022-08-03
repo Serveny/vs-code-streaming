@@ -4,9 +4,10 @@ function decorationRenderOptions(background: string, color: string): DecorationR
     backgroundColor: background,
     // gutterIconSize: $config.gutterIconSize,
     // gutterIconPath: gutter?.errorIconPath,
-    //after: {
-    //...afterProps,
-    color: color,
+    after: {
+      //...afterProps,
+      color: color,
+    },
     //backgroundColor: errorMessageBackground,
     //},
     //light: {

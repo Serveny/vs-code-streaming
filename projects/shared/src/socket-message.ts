@@ -16,6 +16,7 @@ export interface TextOpenEvent {
 
 export interface Messages {
   openDoc: TextOpenEvent
+  changeDoc: TextOpenEvent
   textChange: TextDocumentContentChangeEvent[]
   selectionChange: Selection[]
   closeDoc: void

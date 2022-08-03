@@ -1,55 +1,56 @@
-import { DiagnosticChangeEvent, extensions, languages, Position, TextDocument, TextDocumentChangeEvent, TextEditorSelectionChangeEvent, window, workspace } from 'vscode'
+import { DiagnosticChangeEvent, Disposable, languages, TextDocument, TextDocumentChangeEvent, TextEditor, TextEditorSelectionChangeEvent, window, workspace } from 'vscode'
 import { WebSocket } from 'ws'
 import { IMessage, Messages } from '../../shared/src/socket-message'
 
 export function registerEvents(ws: WebSocket) {
-  workspace.onDidOpenTextDocument(onOpenText)
-  workspace.onDidChangeTextDocument(onChangeText)
-  workspace.onDidCloseTextDocument(onCloseDoc)
-  window.onDidChangeTextEditorSelection(onCursorChange)
-  languages.onDidChangeDiagnostics(onChangeDiagnostic)
-
-  openActiveDoc()
+  const dispo: Disposable[] = [
+    workspace.onDidChangeTextDocument(sendChangeText),
+    window.onDidChangeActiveTextEditor(onChangeActiveDoc),
+    window.onDidChangeTextEditorSelection(sendCursorChange),
+    languages.onDidChangeDiagnostics(sendChangeDiagnostic),
+  ]
+  ws.on('close', () => dispo.forEach(item => item.dispose()))
   console.log('events registered')
+  sendOpenActiveDoc()
 
   function send<T extends keyof Messages>(msg: IMessage<T>) {
     ws.send(JSON.stringify(msg))
   }
 
-  function onOpenText(ev: TextDocument) {
-    console.log('OnOpenText')
-    if (ev.languageId !== 'plaintext')
+  function onChangeActiveDoc(editor?: TextEditor) {
+    const doc = editor?.document
+    if (doc) sendOpenDoc(doc)
+    else if (window.visibleTextEditors.length === 0) send({ name: 'closeDoc', data: undefined })
+  }
+
+  function sendOpenDoc(doc: TextDocument) {
+    if (doc.uri.scheme === 'file') {
       send({
         name: 'openDoc',
         data: {
-          content: ev.getText(),
-          languageId: ev.languageId,
-          diagnostics: languages.getDiagnostics(ev.uri),
+          content: doc.getText(),
+          languageId: doc.languageId,
+          diagnostics: languages.getDiagnostics(doc.uri),
         },
       })
+    }
   }
 
-  function onChangeText(ev: TextDocumentChangeEvent) {
+  function sendChangeText(ev: TextDocumentChangeEvent) {
     send({
       name: 'textChange',
       data: ev.contentChanges as any,
     })
   }
 
-  function onCloseDoc() {
-    const activeDoc = window.activeTextEditor?.document
-    if (activeDoc) onOpenText(activeDoc)
-    else send({ name: 'closeDoc', data: undefined })
-  }
-
-  function onCursorChange(ev: TextEditorSelectionChangeEvent) {
+  function sendCursorChange(ev: TextEditorSelectionChangeEvent) {
     send({
       name: 'selectionChange',
       data: ev.selections as any,
     })
   }
 
-  function onChangeDiagnostic(ev: DiagnosticChangeEvent) {
+  function sendChangeDiagnostic(ev: DiagnosticChangeEvent) {
     const activePath = window.activeTextEditor?.document.uri.path
 
     if (activePath && ev.uris.map(uri => uri.path).includes(activePath)) {
@@ -62,8 +63,8 @@ export function registerEvents(ws: WebSocket) {
     }
   }
 
-  function openActiveDoc() {
+  function sendOpenActiveDoc() {
     const doc = window.activeTextEditor?.document
-    if (doc) onOpenText(doc)
+    if (doc) sendOpenDoc(doc)
   }
 }

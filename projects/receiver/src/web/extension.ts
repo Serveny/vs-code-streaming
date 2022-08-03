@@ -1,22 +1,19 @@
 import { Diagnostic, DiagnosticSeverity, ExtensionContext, languages, Selection, TextDocumentContentChangeEvent, TextDocumentContentProvider, Uri, window, workspace } from 'vscode'
 import { Message, Messages, MessagesDict, TextOpenEvent } from '../../../shared/src/socket-message'
-import { changeText, clearDoc, newRange, setSelection, showDoc } from './cmds'
+import { changeText, clearDoc, closeAllDocs, closeDoc, newRange, setSelection, showDoc } from './cmds'
 import { createDecorations } from './decorations'
 
 export function activate(context: ExtensionContext) {
-  let socket = new WebSocket('ws://localhost:1870')
-  socket.onmessage = msg => handle(msg.data)
   openSocketConnection()
   workspace.registerTextDocumentContentProvider(scheme, textProvider)
-  if (!window.activeTextEditor) showDoc('', '')
+  // if (!window.activeTextEditor) showDoc('', '')
 }
 
 function openSocketConnection() {
   console.log('Open WebSocket Connection')
   const socket = new WebSocket('ws://localhost:1870')
   socket.onmessage = msg => handle(msg.data)
-  const openCon = () => setTimeout(() => openSocketConnection(), 1000)
-  socket.onclose = openCon
+  socket.onclose = () => setTimeout(() => openSocketConnection(), 1000)
 }
 
 const scheme = 'vscode-streaming-extension'
@@ -25,9 +22,11 @@ const textProvider = new (class implements TextDocumentContentProvider {
   provideTextDocumentContent = (uri: Uri): string => this.content
   setContent = (str: string) => (this.content = str)
 })()
-const diagsColl = languages.createDiagnosticCollection('vscode-streaming-diags')
+export const diagsColl = languages.createDiagnosticCollection('vscode-streaming-diags')
+
 const handlers: MessagesDict = {
   openDoc: new Message(onOpenDocument),
+  changeDoc: new Message(onChangeDoc),
   textChange: new Message(onChangeText),
   selectionChange: new Message(onChangeSelection),
   closeDoc: new Message(clearDoc),
@@ -41,7 +40,11 @@ function handle(json: string) {
 }
 
 async function onOpenDocument(ev: TextOpenEvent) {
-  await clearDoc()
+  await showDoc(ev.content, ev.languageId)
+  onChangeDiagnostics(ev.diagnostics)
+}
+
+async function onChangeDoc(ev: TextOpenEvent) {
   await showDoc(ev.content, ev.languageId)
   onChangeDiagnostics(ev.diagnostics)
 }
