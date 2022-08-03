@@ -12,6 +12,7 @@ export interface TextOpenEvent {
   content: string
   languageId: string
   diagnostics: Diagnostic[]
+  selections: Selection[]
 }
 
 export interface Messages {

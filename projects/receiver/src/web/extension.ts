@@ -1,12 +1,10 @@
-import { Diagnostic, DiagnosticSeverity, ExtensionContext, languages, Selection, TextDocumentContentChangeEvent, TextDocumentContentProvider, Uri, window, workspace } from 'vscode'
+import { ExtensionContext, languages, Selection, TextDocumentContentChangeEvent, TextDocumentContentProvider, Uri, window, workspace } from 'vscode'
 import { Message, Messages, MessagesDict, TextOpenEvent } from '../../../shared/src/socket-message'
-import { changeText, clearDoc, closeAllDocs, closeDoc, newRange, setSelection, showDoc } from './cmds'
-import { createDecorations } from './decorations'
+import { changeDiagnostics, changeText, clearDoc, setSelection, showDoc } from './cmds'
 
 export function activate(context: ExtensionContext) {
   openSocketConnection()
   workspace.registerTextDocumentContentProvider(scheme, textProvider)
-  // if (!window.activeTextEditor) showDoc('', '')
 }
 
 function openSocketConnection() {
@@ -30,7 +28,7 @@ const handlers: MessagesDict = {
   textChange: new Message(onChangeText),
   selectionChange: new Message(onChangeSelection),
   closeDoc: new Message(clearDoc),
-  diagnosticsChange: new Message(onChangeDiagnostics),
+  diagnosticsChange: new Message(changeDiagnostics),
 }
 
 function handle(json: string) {
@@ -41,12 +39,13 @@ function handle(json: string) {
 
 async function onOpenDocument(ev: TextOpenEvent) {
   await showDoc(ev.content, ev.languageId)
-  onChangeDiagnostics(ev.diagnostics)
+  changeDiagnostics(ev.diagnostics)
+  onChangeSelection(ev.selections)
 }
 
 async function onChangeDoc(ev: TextOpenEvent) {
   await showDoc(ev.content, ev.languageId)
-  onChangeDiagnostics(ev.diagnostics)
+  changeDiagnostics(ev.diagnostics)
 }
 
 async function onChangeText(ev: TextDocumentContentChangeEvent[]) {
@@ -57,19 +56,6 @@ async function onChangeText(ev: TextDocumentContentChangeEvent[]) {
 function onChangeSelection(ev: Selection[]) {
   const editor = window.activeTextEditor
   if (editor) for (const sel of ev) setSelection(editor, sel)
-}
-
-function onChangeDiagnostics(ev: Diagnostic[]) {
-  const editor = window.activeTextEditor
-
-  if (editor) {
-    ev.forEach(diag => {
-      diag.range = newRange(diag.range)
-      diag.severity = DiagnosticSeverity[diag.severity] as any
-    })
-    diagsColl.set(editor.document.uri, ev)
-    createDecorations(editor, ev)
-  }
 }
 
 export function deactivate() {}

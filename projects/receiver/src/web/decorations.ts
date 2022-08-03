@@ -38,7 +38,7 @@ export function createDecorations(editor: TextEditor, diags: Diagnostic[]) {
 
     const decInstanceRenderOptions: DecorationInstanceRenderOptions = {
       after: {
-        contentText: diag.message,
+        contentText: `  ${diag.message}`,
       },
     }
     const diagnosticDecorationOptions: DecorationOptions = {
@@ -60,8 +60,8 @@ export function createDecorations(editor: TextEditor, diags: Diagnostic[]) {
         break
     }
   }
-  editor.setDecorations(decorationTypeError, decorationOptionsError)
-  editor.setDecorations(decorationTypeWarning, decorationOptionsWarning)
-  editor.setDecorations(decorationTypeInfo, decorationOptionsInfo)
   editor.setDecorations(decorationTypeHint, decorationOptionsHint)
+  editor.setDecorations(decorationTypeInfo, decorationOptionsInfo)
+  editor.setDecorations(decorationTypeWarning, decorationOptionsWarning)
+  editor.setDecorations(decorationTypeError, decorationOptionsError)
 }

@@ -18,21 +18,26 @@ export function registerEvents(ws: WebSocket) {
   }
 
   function onChangeActiveDoc(editor?: TextEditor) {
-    const doc = editor?.document
-    if (doc) sendOpenDoc(doc)
+    if (editor) sendOpenDoc(editor)
     else if (window.visibleTextEditors.length === 0) send({ name: 'closeDoc', data: undefined })
   }
 
-  function sendOpenDoc(doc: TextDocument) {
+  function sendOpenDoc(editor: TextEditor) {
+    const doc = editor.document
     if (doc.uri.scheme === 'file') {
-      send({
-        name: 'openDoc',
-        data: {
-          content: doc.getText(),
-          languageId: doc.languageId,
-          diagnostics: languages.getDiagnostics(doc.uri),
-        },
-      })
+      setTimeout(
+        () =>
+          send({
+            name: 'openDoc',
+            data: {
+              content: doc.getText(),
+              languageId: doc.languageId,
+              diagnostics: languages.getDiagnostics(doc.uri),
+              selections: editor.selections as any,
+            },
+          }),
+        100
+      )
     }
   }
 
@@ -64,7 +69,7 @@ export function registerEvents(ws: WebSocket) {
   }
 
   function sendOpenActiveDoc() {
-    const doc = window.activeTextEditor?.document
-    if (doc) sendOpenDoc(doc)
+    const editor = window.activeTextEditor
+    if (editor) sendOpenDoc(editor)
   }
 }

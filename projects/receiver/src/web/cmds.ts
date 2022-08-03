@@ -1,4 +1,6 @@
-import { commands, Position, Range, Selection, TextDocument, TextDocumentContentChangeEvent, TextEditor, TextEditorRevealType, window, workspace } from 'vscode'
+import { commands, Diagnostic, DiagnosticSeverity, Position, Range, Selection, TextDocument, TextDocumentContentChangeEvent, TextEditor, TextEditorRevealType, window, workspace } from 'vscode'
+import { createDecorations } from './decorations'
+import { diagsColl } from './extension'
 
 export function newRange(rangeArr: any): Range {
   return new Range(rangeArr[0], rangeArr[1])
@@ -19,7 +21,6 @@ export function setSelection(editor: TextEditor, sel: Selection) {
 
 export async function closeDoc() {
   const editor = await clearDoc()
-  console.log('CLOSE EDITOR: ', editor)
   if (editor) {
     await commands.executeCommand('workbench.action.closeActiveEditor')
   }
@@ -50,5 +51,19 @@ function findDoc(langId: string): TextDocument | undefined {
 export async function clearDoc(): Promise<TextEditor | undefined> {
   const editor = window.activeTextEditor
   if (editor) await editor.edit(edit => edit.delete(new Range(new Position(0, 0), new Position(editor.document.lineCount + 1, 0))))
+  changeDiagnostics([])
   return editor
+}
+
+export function changeDiagnostics(ev: Diagnostic[]) {
+  const editor = window.activeTextEditor
+
+  if (editor) {
+    ev.forEach(diag => {
+      diag.range = newRange(diag.range)
+      diag.severity = DiagnosticSeverity[diag.severity] as any
+    })
+    diagsColl.set(editor.document.uri, ev)
+    createDecorations(editor, ev)
+  }
 }
