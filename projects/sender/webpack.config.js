@@ -52,18 +52,12 @@ const extensionConfig = {
       beforeCompile: () => {
         exec('cd ../../node_modules/vscode-web/dist/ && npm i', () => {
           fs.copy('./src/index.html', './dist/index.html')
+          fs.copy('./src/custom.css', './dist/custom.css')
           fs.copy('./src/product.json', './dist/product.json')
           fs.copy('../../node_modules/vscode-web', './dist/vscode-web')
         })
       },
     }),
-    //new CopyPlugin({
-    //patterns: [
-    //{ from: './src/index.html', to: 'index.html' },
-    //{ from: './src/product.json', to: 'product.json' },
-    //{ from: '../../node_modules/vscode-web', to: 'vscode-web' },
-    //],
-    //}),
   ],
 }
 module.exports = [extensionConfig]
