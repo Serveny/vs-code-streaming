@@ -9,5 +9,12 @@
 			"es6",
 			"WebWorker"
 		],
-	}
+	},
+	"exclude": [
+		"node_modules",
+		"build",
+		"dist",
+		"src/**/*.js",
+		"src/**/*.jsx"
+	]
 }

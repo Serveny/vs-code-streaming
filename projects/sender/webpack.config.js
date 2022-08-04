@@ -4,7 +4,6 @@
 'use strict'
 
 const path = require('path')
-const CopyPlugin = require('copy-webpack-plugin')
 const EventHooksPlugin = require('event-hooks-webpack-plugin')
 const { exec } = require('child_process')
 const fs = require('fs-extra')

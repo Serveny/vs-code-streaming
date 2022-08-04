@@ -43,12 +43,12 @@
     "configuration": {
       "title": "Code Streaming Screen",
       "properties": {
-        "activateOnStart": {
+        "codeStreamingScreen.activateOnStart": {
           "type": "boolean",
           "default": false,
           "description": "Active code streaming screen server on VS Code start"
         },
-        "port": {
+        "codeStreamingScreen.port": {
           "type": "number",
           "default": 1870,
           "description": "Port for the local code streaming screen server"

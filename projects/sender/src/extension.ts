@@ -1,6 +1,5 @@
 import { commands, ExtensionContext, window, workspace } from 'vscode'
 import { registerEvents } from './ev-register'
-import { updateGlobalSetting } from './settings'
 import { Constants, ExtensionConfig } from './types'
 import { WsServer } from './ws-server'
 
@@ -25,9 +24,9 @@ function activateConfig(ctx: ExtensionContext) {
 }
 
 function updateConfigAndEverything() {
-  updateGlobalSetting(Constants.SettingsPrefix, 'test')
-  console.log('Configs: ', workspace.getConfiguration())
   $config = workspace.getConfiguration().get(Constants.SettingsPrefix) as ExtensionConfig
+  console.log('Configs: ', workspace.getConfiguration())
+  console.log('$config: ', $config)
 }
 
 function registerCommands(ctx: ExtensionContext) {
