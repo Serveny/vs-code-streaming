@@ -1,8 +1,4 @@
 {
-  "name": "vs-code-streaming",
-  "displayName": "VS Code Streaming",
-  "description": "Allows the code to be displayed in a separate window that can be used as a browser source for streaming software. This allows a display specifically adapted to the stream without having to change the display for the programmer/streamer.",
-  "version": "0.0.1",
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/express-ws": "^3.0.1",

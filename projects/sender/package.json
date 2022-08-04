@@ -1,14 +1,26 @@
 {
-  "name": "vs-code-streaming",
-  "displayName": "VS Code Streaming",
-  "description": "Allows the code to be displayed in a separate window that can be used as a browser source for streaming software. This allows a display specifically adapted to the stream without having to change the display for the programmer/streamer.",
+  "name": "code-streaming-screen",
+  "displayName": "Code Streaming Screen",
+  "description": "Mirrors the active editor in a browser window that can be used as a browser source for streaming software. This allows a display specifically adapted to the stream without having to change the display for the programmer/streamer.",
   "version": "0.0.1",
+  "publisher": "Serveny",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.69.0"
   },
   "categories": [
     "Other"
   ],
+  "keywords": [
+    "screen",
+    "streaming",
+    "web"
+  ],
+  "icon": "images/logo128.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Serveny/vs-code-streaming"
+  },
   "activationEvents": [
     "onStartupFinished"
   ],
@@ -16,9 +28,32 @@
   "contributes": {
     "commands": [
       {
-        "command": "vs-code-streaming.startCodeStreaming",
-        "title": "Start Code Streaming"
+        "command": "codeStreamingScreen.start",
+        "title": "Start Code Streaming Screen"
+      },
+      {
+        "command": "codeStreamingScreen.restart",
+        "title": "Restart Code Streaming Screen"
+      },
+      {
+        "command": "codeStreamingScreen.stop",
+        "title": "Stop Code Streaming Screen"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Code Streaming Screen",
+      "properties": {
+        "activateOnStart": {
+          "type": "boolean",
+          "default": false,
+          "description": "Active code streaming screen server on VS Code start"
+        },
+        "port": {
+          "type": "number",
+          "default": 1870,
+          "description": "Port for the local code streaming screen server"
+        }
+      }
+    }
   }
 }
