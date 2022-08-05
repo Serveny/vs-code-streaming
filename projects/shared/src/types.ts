@@ -1,9 +1,5 @@
 interface ExtensionConfigType {
   /**
-   * If extension is enabled.
-   */
-  enabled: boolean
-  /**
    * Local code streaming screen server port
    */
   activateOnStart: boolean
@@ -30,11 +26,6 @@ interface ExtensionConfigType {
 }
 
 export type ExtensionConfig = Readonly<ExtensionConfigType>
-
-/**
- * All command ids contributed by this extensions.
- */
-export const enum CommandId {}
 
 export const enum Constants {
   /**

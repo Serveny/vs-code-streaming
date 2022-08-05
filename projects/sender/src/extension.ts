@@ -9,8 +9,7 @@ let server: WsServer | undefined
 export function activate(ctx: ExtensionContext) {
   activateConfig(ctx)
   registerCommands(ctx)
-  if ($config.activateOnStart) $config.enabled
-  if ($config.enabled) start()
+  if ($config.activateOnStart) start()
 }
 
 function activateConfig(ctx: ExtensionContext) {
@@ -25,8 +24,6 @@ function activateConfig(ctx: ExtensionContext) {
 
 function updateConfigAndEverything() {
   $config = workspace.getConfiguration().get(Constants.settingsPrefix) as ExtensionConfig
-  console.log('Configs: ', workspace.getConfiguration())
-  console.log('$config: ', $config)
 }
 
 function registerCommands(ctx: ExtensionContext) {
@@ -37,7 +34,7 @@ function registerCommands(ctx: ExtensionContext) {
 }
 
 function start() {
-  if ($config.enabled) {
+  if (server) {
     window.showInformationMessage(`Code Streaming Screen already active under "http://localhost:${$config.port}"`)
   } else {
     server = new WsServer()

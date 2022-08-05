@@ -12,6 +12,19 @@ span[class^='ced']::after {
   flex-direction: column;
 }
 
+.view-line {
+  animation: wiggler 4s ease-in-out infinite;
+  transition: all 0.4s ease !important;
+}
+
+.line-numbers {
+  animation: chiller 4s ease-in-out infinite;
+}
+
+.active-line-number {
+  font-weight: bold;
+}
+
 @keyframes bounce {
   0% {
     transform: translateX(0px) scale(0.99) translateY(-5%);
@@ -51,5 +64,35 @@ span[class^='ced']::after {
   100% {
     transform: translateX(0px) scale(0.99) translateY(-5%);
     timing-function: ease-in;
+  }
+}
+
+@keyframes chiller {
+  0% {
+    transform: translate(-2px, 0px);
+  }
+  25% {
+    transform: translate(0px, 2px);
+  }
+  50% {
+    transform: translate(2px, 0px);
+  }
+  75% {
+    transform: translate(0px, -2px);
+  }
+  100% {
+    transform: translate(-2px, 0px);
+  }
+}
+
+@keyframes wiggler {
+  0% {
+    transform: rotateX(30deg) rotateY(0.3deg);
+  }
+  50% {
+    transform: rotateX(-30deg) rotateY(-0.3deg);
+  }
+  100% {
+    transform: rotateX(30deg) rotateY(0.3deg);
   }
 }
