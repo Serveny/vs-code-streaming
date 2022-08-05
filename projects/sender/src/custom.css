@@ -7,18 +7,19 @@
 }
 
 span[class^='ced']::after {
-  animation: bounce 1500ms linear infinite;
+  animation: error 350ms linear infinite;
   display: inline-flex;
   flex-direction: column;
+  margin-left: 20px;
 }
 
 .view-line {
-  animation: wiggler 4s ease-in-out infinite;
+  animation: glitch 10s ease-in-out infinite;
   transition: all 0.4s ease !important;
 }
 
 .line-numbers {
-  animation: chiller 4s ease-in-out infinite;
+  animation: chiller 2s ease-in-out infinite;
 }
 
 .active-line-number {
@@ -94,5 +95,97 @@ span[class^='ced']::after {
   }
   100% {
     transform: rotateX(30deg) rotateY(0.3deg);
+  }
+}
+
+/* Animation created by GreenBoyGreen: https://github.com/GreenBoyGreen */
+@keyframes glitch {
+  0% {
+    transform-origin: top;
+    text-shadow: -1px -1px 0 blue, 1px 1px 0 red;
+  }
+  16% {
+    text-shadow: none;
+  }
+  21% {
+    transform: translate(2px, 2px);
+  }
+  23% {
+    text-shadow: -1px -1px 0 blue, 1px 1px 0 red;
+  }
+  33% {
+    text-shadow: none;
+    transform: none;
+  }
+  36% {
+    text-shadow: -1px -1px 0 blue, 1px 1px 0 red;
+    transform: rotateX(30deg);
+  }
+  42% {
+    text-shadow: none;
+    transform: translate(-2px, -2px);
+  }
+  66% {
+    text-shadow: -1px -1px 0 blue, 1px 1px 0 red;
+  }
+  80% {
+    text-shadow: none;
+  }
+  84% {
+    transform: none;
+    text-shadow: -1px -1px 0 blue, 1px 1px 0 red;
+  }
+  85% {
+    transform: translate(2px, 2px);
+  }
+  91% {
+    text-shadow: none;
+  }
+  97% {
+    text-shadow: -1px -1px 0 blue, 1px 1px 0 red;
+    transform: none;
+  }
+  100% {
+    text-shadow: none;
+  }
+}
+
+/* Animation created by GreenBoyGreen: https://github.com/GreenBoyGreen */
+@keyframes error {
+  0% {
+    transform: translate(4px, 4px);
+  }
+  10% {
+    transform: translate(4px, -8px);
+  }
+  20% {
+    transform: translate(-8px, 0px);
+  }
+  30% {
+    transform: translate(-4px, -10px);
+  }
+  40% {
+    transform: translate(2px, -6px);
+  }
+  50% {
+    transform: translate(2px, -6px);
+  }
+  60% {
+    transform: translate(-8px, 0px);
+  }
+  70% {
+    transform: translate(-16px, -8px);
+  }
+  80% {
+    transform: translate(0px, 8px);
+  }
+  80% {
+    transform: translate(0px, 20px);
+  }
+  80% {
+    transform: translate(-10px, -4px);
+  }
+  100% {
+    transform: none;
   }
 }
