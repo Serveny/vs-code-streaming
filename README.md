@@ -1,4 +1,4 @@
-# vs-code-streaming
+# VS Code Streaming Screen
 
 VS Code extension to display the code in a seperate window that can be used as a browser source for streaming software. This allows a display specifically adapted to the stream without having to change the display for the programmer/streamer.
 
@@ -41,4 +41,4 @@ This extension contributes the following settings:
 
 - CSS Animations: GreenBoyGreen (https://github.com/GreenBoyGreen)
 
-  **Enjoy!**
+**Enjoy!**
