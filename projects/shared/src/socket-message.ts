@@ -1,4 +1,5 @@
 import { TextDocumentContentChangeEvent, Selection, Diagnostic } from 'vscode'
+import { ExtensionConfig } from './types'
 
 export class Message<T> {
   constructor(private handler: (arg: T) => void) {}
@@ -16,6 +17,7 @@ export interface TextOpenEvent {
 }
 
 export interface Messages {
+  changeCfg: ExtensionConfig
   openDoc: TextOpenEvent
   changeDoc: TextOpenEvent
   textChange: TextDocumentContentChangeEvent[]

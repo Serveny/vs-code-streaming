@@ -1,6 +1,6 @@
 import { commands, ExtensionContext, window, workspace } from 'vscode'
 import { registerEvents } from './ev-register'
-import { Constants, ExtensionConfig } from './types'
+import { Constants, ExtensionConfig } from '../../shared/src/types'
 import { WsServer } from './ws-server'
 
 export let $config: ExtensionConfig
@@ -18,22 +18,22 @@ function activateConfig(ctx: ExtensionContext) {
 
   ctx.subscriptions.push(
     workspace.onDidChangeConfiguration(ev => {
-      if (ev.affectsConfiguration(Constants.SettingsPrefix)) updateConfigAndEverything()
+      if (ev.affectsConfiguration(Constants.settingsPrefix)) updateConfigAndEverything()
     })
   )
 }
 
 function updateConfigAndEverything() {
-  $config = workspace.getConfiguration().get(Constants.SettingsPrefix) as ExtensionConfig
+  $config = workspace.getConfiguration().get(Constants.settingsPrefix) as ExtensionConfig
   console.log('Configs: ', workspace.getConfiguration())
   console.log('$config: ', $config)
 }
 
 function registerCommands(ctx: ExtensionContext) {
   const subs = ctx.subscriptions
-  subs.push(commands.registerCommand(`${Constants.SettingsPrefix}.start`, start))
-  subs.push(commands.registerCommand(`${Constants.SettingsPrefix}.restart`, restart))
-  subs.push(commands.registerCommand(`${Constants.SettingsPrefix}.stop`, stop))
+  subs.push(commands.registerCommand(`${Constants.settingsPrefix}.start`, start))
+  subs.push(commands.registerCommand(`${Constants.settingsPrefix}.restart`, restart))
+  subs.push(commands.registerCommand(`${Constants.settingsPrefix}.stop`, stop))
 }
 
 function start() {

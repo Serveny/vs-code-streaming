@@ -1,20 +1,30 @@
-import { DiagnosticChangeEvent, Disposable, languages, TextDocument, TextDocumentChangeEvent, TextEditor, TextEditorSelectionChangeEvent, window, workspace } from 'vscode'
+import { ConfigurationChangeEvent, DiagnosticChangeEvent, Disposable, languages, TextDocumentChangeEvent, TextEditor, TextEditorSelectionChangeEvent, window, workspace } from 'vscode'
 import { WebSocket } from 'ws'
 import { IMessage, Messages } from '../../shared/src/socket-message'
+import { Constants, ExtensionConfig } from '../../shared/src/types'
 
 export function registerEvents(ws: WebSocket) {
   const dispo: Disposable[] = [
+    workspace.onDidChangeConfiguration(sendChangeCfg),
     workspace.onDidChangeTextDocument(sendChangeText),
     window.onDidChangeActiveTextEditor(onChangeActiveDoc),
     window.onDidChangeTextEditorSelection(sendCursorChange),
     languages.onDidChangeDiagnostics(sendChangeDiagnostic),
   ]
   ws.on('close', () => dispo.forEach(item => item.dispose()))
-  console.log('events registered')
   sendOpenActiveDoc()
+  console.log('events registered')
 
   function send<T extends keyof Messages>(msg: IMessage<T>) {
     ws.send(JSON.stringify(msg))
+  }
+
+  function sendChangeCfg(ev: ConfigurationChangeEvent) {
+    if (ev.affectsConfiguration(Constants.settingsPrefix))
+      send({
+        name: 'changeCfg',
+        data: workspace.getConfiguration().get(Constants.settingsPrefix) as ExtensionConfig,
+      })
   }
 
   function onChangeActiveDoc(editor?: TextEditor) {

@@ -1,6 +1,6 @@
 {
-	"name": "vs-code-streaming-web",
-	"displayName": "vs-code-streaming-web",
+	"name": "code-streaming-sreeen-web-receiver",
+	"displayName": "Code Streaming Screen Web Receiver",
 	"description": "",
 	"publisher": "Serveny",
 	"version": "0.0.1",
@@ -13,5 +13,17 @@
 	"activationEvents": [
 		"onStartupFinished"
 	],
-	"browser": "./dist/web/extension.js"
+	"browser": "./dist/web/extension.js",
+	"contributes": {
+		"configuration": {
+			"title": "Code Streaming Screen Web Receiver",
+			"properties": {
+				"codeStreamingScreen.port": {
+					"type": "number",
+					"default": 1870,
+					"description": "Port for the local code streaming screen websocket connection. (Must be the same as in the main VS Code instance)"
+				}
+			}
+		}
+	}
 }

@@ -1,4 +1,4 @@
-import { commands, Diagnostic, DiagnosticSeverity, Position, Range, Selection, TextDocument, TextDocumentContentChangeEvent, TextEditor, TextEditorRevealType, window, workspace } from 'vscode'
+import { commands, Diagnostic, DiagnosticSeverity, Position, Range, Selection, TextDocumentContentChangeEvent, TextEditor, TextEditorRevealType, window, workspace } from 'vscode'
 import { createDecorations } from './decorations'
 import { diagsColl } from './extension'
 
@@ -8,7 +8,6 @@ export function newRange(rangeArr: any): Range {
 
 export function changeText(editor: TextEditor, change: TextDocumentContentChangeEvent): Thenable<boolean> {
   const range = newRange(change.range)
-
   return editor.edit(eb => {
     eb.delete(range)
     if (change.text !== '') eb.insert(range.start, change.text)
@@ -25,7 +24,7 @@ export async function closeDoc() {
   if (editor) await commands.executeCommand('workbench.action.closeActiveEditor')
 }
 
-export async function closeAllDocs() {
+export async function closeAllDocs(): Promise<void> {
   for (const td of workspace.textDocuments) {
     await window.showTextDocument(td.uri, { preview: true, preserveFocus: false })
     await closeDoc()
@@ -41,10 +40,6 @@ export async function showDoc(content: string, langId: string) {
     await window.showTextDocument(doc, { preview: false })
     await window.activeTextEditor?.edit(te => te.insert(new Position(0, 0), content))
   } else await window.activeTextEditor?.edit(te => te.insert(new Position(0, 0), content))
-}
-
-function findDoc(langId: string): TextDocument | undefined {
-  return workspace.textDocuments.find(doc => doc.languageId === langId)
 }
 
 export async function clearDoc(): Promise<TextEditor | undefined> {

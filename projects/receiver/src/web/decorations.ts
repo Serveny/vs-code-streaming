@@ -1,4 +1,4 @@
-import { DecorationInstanceRenderOptions, DecorationOptions, DecorationRenderOptions, Diagnostic, Position, Range, TextEditor, ThemeColor, window } from 'vscode'
+import { DecorationInstanceRenderOptions, DecorationOptions, DecorationRenderOptions, Diagnostic, TextEditor, window } from 'vscode'
 function decorationRenderOptions(background: string, color: string): DecorationRenderOptions {
   return {
     backgroundColor: background,

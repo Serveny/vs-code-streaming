@@ -40,5 +40,5 @@ export const enum Constants {
   /**
    * Prefix used for all settings of this extension.
    */
-  SettingsPrefix = 'codeStreamingScreen',
+  settingsPrefix = 'codeStreamingScreen',
 }
