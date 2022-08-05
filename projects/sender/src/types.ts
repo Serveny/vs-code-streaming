@@ -34,16 +34,7 @@ export type ExtensionConfig = Readonly<ExtensionConfigType>
 /**
  * All command ids contributed by this extensions.
  */
-export const enum CommandId {
-  toggle = 'errorLens.toggle',
-  toggleError = 'errorLens.toggleError',
-  toggleWarning = 'errorLens.toggleWarning',
-  toggleInfo = 'errorLens.toggleInfo',
-  toggleHint = 'errorLens.toggleHint',
-  copyProblemMessage = 'errorLens.copyProblemMessage',
-  statusBarCommand = 'errorLens.statusBarCommand',
-  revealLine = 'errorLens.revealLine',
-}
+export const enum CommandId {}
 
 export const enum Constants {
   /**
