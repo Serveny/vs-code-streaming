@@ -29,8 +29,7 @@ To run this, you need just VS Code and any streaming software, which can show a 
 
 This extension contributes the following settings:
 
-- `myExtension.enable`: enable/disable this extension
-- `myExtension.thing`: set to `blah` to do something
+- `.port`: Port for local webserver and websocket connection. Must be the same as in web instance settings.
 
 ## Known Issues
 
@@ -39,6 +38,6 @@ This extension contributes the following settings:
 
 ## Additional Help
 
-- CSS Animations: GreenBoyGreen (https://github.com/GreenBoyGreen)
+- CSS animations: ![GreenBoyGreen](https://github.com/GreenBoyGreen)
 
   **Enjoy!**
