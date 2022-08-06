@@ -18,14 +18,13 @@ The idea is to use a seperate VS Code web instance and sync it with your real VS
 - Syntax highlighting
 - Cursor focusation
 - Selection synchronization
+- Text animations
 
 ## Requirements
 
 To run this, you need just VS Code and any streaming software, which can show a browser source.
 
 ## Extension Settings
-
-// TODO
 
 This extension contributes the following settings:
 
@@ -35,6 +34,7 @@ This extension contributes the following settings:
 
 - No Text decoration sync (At the moment not possible, because there is no way to get them over the vscode extension api. At least I do not know of any solution)
 - Cursor doesn't show, if you interacted with the web instance. Just reload the browser source/window and it should work again.
+- Desync sometimes when to much text changes in to less time
 
 ## Additional Help
 
