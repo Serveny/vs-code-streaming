@@ -56,9 +56,9 @@ const webExtensionConfig = {
     // @ts-ignore
     new EventHooksPlugin({
       done: () => {
-        fs.copy('./dist/web/extension.js', '../sender/dist/receiver/dist/web/extension.js')
-        fs.copy('./package.json', '../sender/dist/receiver/package.json')
-        fs.copy('./package.nls.json', '../sender/dist/receiver/package.nls.json')
+        fs.copy('./dist/web/extension.js', '../sender/dist/web/receiver/dist/web/extension.js')
+        fs.copy('./package.json', '../sender/dist/web/receiver/package.json')
+        fs.copy('./package.nls.json', '../sender/dist/web/receiver/package.nls.json')
       },
     }),
   ],

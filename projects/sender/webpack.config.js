@@ -13,20 +13,26 @@ const fs = require('fs-extra')
 
 /** @type WebpackConfig */
 const extensionConfig = {
-  target: 'node', // vscode extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
-  mode: 'none', // this leaves the source code as close as possible to the original (when packaging we set this to 'production')
+  target: 'node',
+  mode: 'none',
 
-  entry: './src/extension.ts', // the entry point of this extension, 📖 -> https://webpack.js.org/configuration/entry-context/
+  entry: './src/extension.ts',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'extension.js',
     libraryTarget: 'commonjs2',
   },
   externals: {
-    vscode: 'commonjs vscode', // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
+    vscode: 'commonjs vscode',
+    express: 'express',
+    bufferutil: 'bufferutil',
+    'utf-8-validate': 'utf-8-validate',
   },
   resolve: {
     extensions: ['.ts', '.js'],
+    alias: {
+      handlebars: 'handlebars/dist/handlebars.js',
+    },
   },
   module: {
     rules: [
@@ -50,13 +56,37 @@ const extensionConfig = {
     new EventHooksPlugin({
       beforeCompile: () => {
         exec('cd ../../node_modules/vscode-web/dist/ && npm i', () => {
-          fs.copy('./src/index.html', './dist/index.html')
-          fs.copy('./src/custom.css', './dist/custom.css')
+          fs.copy('./src/views', './dist/views')
+          fs.copy('./src/custom.css', './dist/web/custom.css')
           fs.copy('./src/product.json', './dist/product.json')
-          fs.copy('../../node_modules/vscode-web', './dist/vscode-web')
+          fs.copy('../../node_modules/vscode-web', './dist/web/vscode-web')
         })
       },
     }),
   ],
 }
-module.exports = [extensionConfig]
+
+const vsWebCustomizerConfig = {
+  target: 'web',
+  entry: './src/web-customizer.ts',
+  mode: 'none',
+  output: {
+    path: path.resolve(__dirname, 'dist/web'),
+    filename: 'web-customizer.js',
+  },
+  module: {
+    rules: [
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'ts-loader',
+          },
+        ],
+      },
+    ],
+  },
+}
+
+module.exports = [extensionConfig, vsWebCustomizerConfig]

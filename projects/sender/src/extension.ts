@@ -1,10 +1,10 @@
 import { commands, ExtensionContext, window, workspace } from 'vscode'
 import { registerEvents } from './ev-register'
 import { Constants, ExtensionConfig } from '../../shared/src/types'
-import { WsServer } from './ws-server'
+import { CodeScreenServer } from './server'
 
 export let $config: ExtensionConfig
-let server: WsServer | undefined
+let server: CodeScreenServer | undefined
 
 export function activate(ctx: ExtensionContext) {
   activateConfig(ctx)
@@ -37,7 +37,7 @@ function start() {
   if (server) {
     window.showInformationMessage(`Code Streaming Screen already active under "http://localhost:${$config.port}"`)
   } else {
-    server = new WsServer()
+    server = new CodeScreenServer()
     server.open(ws => registerEvents(ws))
     window.showInformationMessage(`Code Streaming Screen Server started: "http://localhost:${$config.port}"`)
   }

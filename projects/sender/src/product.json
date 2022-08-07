@@ -1,25 +1,15 @@
 {
   "productConfiguration": {
-    "nameShort": "VSCode Streaming",
-    "nameLong": "VSCode Streaming",
-    "applicationName": "vscode-streaming",
-    "dataFolderName": ".vscode-streaming",
-    "version": "1.69.2",
-    "extensionsGallery": {
-      "serviceUrl": "https://open-vsx.org/vscode/gallery",
-      "itemUrl": "https://open-vsx.org/vscode/item",
-      "resourceUrlTemplate": "https://openvsxorg.blob.core.windows.net/resources/{publisher}/{name}/{version}/{path}"
-    },
-    "extensionEnabledApiProposals": {
-      "vscode.vscode-web-playground": [
-        "textSearchProvider"
-      ]
-    }
+    "nameShort": "CSSW",
+    "nameLong": "Code Streaming Screen Web",
+    "applicationName": "code-streaming-screen-web",
+    "dataFolderName": ".code-streaming-screen-web",
+    "version": "1.69.2"
   },
   "additionalBuiltinExtensions": [
     {
       "scheme": "http",
-      "path": "./receiver"
+      "path": "./web/receiver"
     }
   ]
 }
