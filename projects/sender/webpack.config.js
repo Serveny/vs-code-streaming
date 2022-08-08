@@ -66,13 +66,16 @@ const extensionConfig = {
   ],
 }
 
-const vsWebCustomizerConfig = {
+const webCustomizerConfig = {
   target: 'web',
   entry: './src/web-customizer.ts',
   mode: 'none',
   output: {
     path: path.resolve(__dirname, 'dist/web'),
     filename: 'web-customizer.js',
+    libraryTarget: 'var',
+    // `library` determines the name of the global variable
+    library: 'webCustomizer',
   },
   module: {
     rules: [
@@ -87,6 +90,9 @@ const vsWebCustomizerConfig = {
       },
     ],
   },
+  resolve: {
+    extensions: ['.ts', '.js'],
+  },
 }
 
-module.exports = [extensionConfig, vsWebCustomizerConfig]
+module.exports = [extensionConfig, webCustomizerConfig]

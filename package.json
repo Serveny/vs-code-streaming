@@ -8,7 +8,7 @@
     "@types/node": "16.x",
     "@types/vscode": "^1.69.0",
     "@types/ws": "^8.5.3",
-    "@typescript-eslint/eslint-plugin": "^5.30.0",
+    "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.30.7",
     "@vscode/test-electron": "^2.1.5",
     "copy-webpack-plugin": "^11.0.0",
@@ -40,7 +40,7 @@
     "receiver-compile": "cd ./projects/receiver && webpack",
     "receiver-watch": "cd ./projects/receiver && webpack --watch",
     "receiver-package": "cd ./projects/receiver && webpack --mode production --devtool hidden-source-map",
-    "lint": "eslint src --ext ts",
+    "lint": "eslint ./projects --ext ts",
     "clean-dist": "rimraf ./projects/sender/dist && rimraf ./projects/receiver/dist",
     "pack": "npm run clean-dist && npm run receiver-compile && npm run sender-compile && cd ./projects/sender && vsce package"
   }

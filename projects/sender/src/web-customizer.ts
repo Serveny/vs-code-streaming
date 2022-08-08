@@ -1,7 +1,10 @@
 /// <reference lib="dom" />
 
-export function startVsWebCustomizer(port: number = 1870) {
-  const socket = new WebSocket(`ws://localhost:${port}`)
-  console.log('Second Socket: ', socket)
-  socket.onmessage = ev => console.log('SOCKET-EV: ', ev)
+import { sendIdentification, WebSocketType } from './../../shared/src/socket-message'
+
+export function start(port: number): void {
+  const ws = new WebSocket(`ws://localhost:${port}`)
+  console.log('Second Socket: ', ws)
+  ws.onmessage = (ev): void => console.log('SOCKET-EV: ', ev)
+  ws.onopen = (): void => sendIdentification(ws, WebSocketType.webCustomizer)
 }

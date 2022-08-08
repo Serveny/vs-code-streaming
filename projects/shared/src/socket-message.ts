@@ -9,6 +9,15 @@ export class Message<T> {
   }
 }
 
+export enum WebSocketType {
+  extension,
+  webCustomizer,
+}
+
+export interface Identification {
+  type: WebSocketType
+}
+
 export interface TextOpenEvent {
   content: string
   languageId: string
@@ -31,4 +40,11 @@ export type MessagesDict = { [K in keyof Messages]: Message<Messages[K]> }
 export interface IMessage<T extends keyof Messages> {
   name: T
   data: Messages[T]
+}
+
+export function sendIdentification(ws: WebSocket, type: WebSocketType): void {
+  const msg: Identification = {
+    type: type,
+  }
+  ws.send(JSON.stringify(msg))
 }

@@ -27,7 +27,7 @@ const decorationTypeWarning = window.createTextEditorDecorationType(decorationRe
 const decorationTypeInfo = window.createTextEditorDecorationType(decorationRenderOptions('#00b7e420', '#00b7e4'))
 const decorationTypeHint = window.createTextEditorDecorationType(decorationRenderOptions('#17a2a220', '#2faf64'))
 
-export function createDecorations(editor: TextEditor, diags: Diagnostic[]) {
+export function createDecorations(editor: TextEditor, diags: Diagnostic[]): void {
   const decorationOptionsError: DecorationOptions[] = []
   const decorationOptionsWarning: DecorationOptions[] = []
   const decorationOptionsInfo: DecorationOptions[] = []

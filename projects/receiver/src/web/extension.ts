@@ -1,18 +1,18 @@
 import { ExtensionContext, languages, Selection, TextDocumentContentChangeEvent, TextDocumentContentProvider, window, workspace } from 'vscode'
-import { Message, Messages, MessagesDict, TextOpenEvent } from '../../../shared/src/socket-message'
+import { Message, Messages, MessagesDict, sendIdentification, TextOpenEvent, WebSocketType } from '../../../shared/src/socket-message'
 import { Constants, ExtensionConfig } from '../types'
 import { changeDiagnostics, changeText, clearDoc, closeAllDocs, setSelection, showDoc } from './cmds'
 
 export let $config: ExtensionConfig | undefined
 let $socket: WebSocket | undefined
 
-export function activate(ctx: ExtensionContext) {
+export function activate(ctx: ExtensionContext): void {
   activateConfig(ctx)
   openSocketConnection()
   workspace.registerTextDocumentContentProvider(scheme, textProvider)
 }
 
-function activateConfig(ctx: ExtensionContext) {
+function activateConfig(ctx: ExtensionContext): void {
   console.log('WORKSPACE: ', workspace)
 
   updateConfigAndEverything()
@@ -24,25 +24,26 @@ function activateConfig(ctx: ExtensionContext) {
   )
 }
 
-async function updateConfigAndEverything(cfg?: ExtensionConfig) {
+async function updateConfigAndEverything(cfg?: ExtensionConfig): Promise<void> {
   $config = cfg ?? (workspace.getConfiguration().get(Constants.settingsPrefix) as ExtensionConfig)
   await closeAllDocs()
 }
 
-function openSocketConnection() {
-  console.log('Open WebSocket Connection on port', $config?.port)
+function openSocketConnection(): void {
   if (!$config || $socket) return
-  const socket = new WebSocket(`ws://localhost:${$config.port}`)
-  socket.onmessage = msg => handle(msg.data)
-  socket.onclose = () => setTimeout(() => openSocketConnection(), 1000)
-  $socket = socket
+  console.log('Open WebSocket Connection on port', $config?.port)
+  const ws = new WebSocket(`ws://localhost:${$config.port}`)
+  ws.onopen = (): void => sendIdentification(ws, WebSocketType.extension)
+  ws.onmessage = (msg): void => handle(msg.data)
+  ws.onclose = (): NodeJS.Timeout => setTimeout(() => openSocketConnection(), 1000)
+  $socket = ws
 }
 
 const scheme = 'vscode-streaming-extension'
 const textProvider = new (class implements TextDocumentContentProvider {
-  private content: string = ''
+  private content = ''
   provideTextDocumentContent = (): string => this.content
-  setContent = (str: string) => (this.content = str)
+  setContent = (str: string): string => (this.content = str)
 })()
 export const diagsColl = languages.createDiagnosticCollection('vscode-streaming-diags')
 
@@ -56,36 +57,34 @@ const handlers: MessagesDict = {
   diagnosticsChange: new Message(changeDiagnostics),
 }
 
-function handle(json: string) {
+function handle(json: string): void {
   const msg = JSON.parse(json)
   const name = msg.name as keyof Messages
   handlers[name].invoke(msg.data)
 }
 
-async function onOpenDocument(ev: TextOpenEvent) {
+async function onOpenDocument(ev: TextOpenEvent): Promise<void> {
   await showDoc(ev.content, ev.languageId)
   changeDiagnostics(ev.diagnostics)
   onChangeSelection(ev.selections)
 }
 
-async function onChangeDoc(ev: TextOpenEvent) {
+async function onChangeDoc(ev: TextOpenEvent): Promise<void> {
   await showDoc(ev.content, ev.languageId)
   changeDiagnostics(ev.diagnostics)
 }
 
-async function onChangeText(ev: TextDocumentContentChangeEvent[]) {
+async function onChangeText(ev: TextDocumentContentChangeEvent[]): Promise<void> {
   const editor = window.activeTextEditor
   if (editor) for (const change of ev) await changeText(editor, change)
 }
 
-function onChangeSelection(ev: Selection[]) {
+function onChangeSelection(ev: Selection[]): void {
   const editor = window.activeTextEditor
   if (editor) for (const sel of ev) setSelection(editor, sel)
 }
 
-function onChangeCfg(cfg: ExtensionConfig) {
+function onChangeCfg(cfg: ExtensionConfig): void {
   console.log('Change cfg: ', cfg)
   updateConfigAndEverything(cfg)
 }
-
-export function deactivate() {}

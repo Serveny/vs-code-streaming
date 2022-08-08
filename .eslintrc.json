@@ -8,14 +8,24 @@
     "plugins": [
         "@typescript-eslint"
     ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
     "rules": {
-        "@typescript-eslint/explicit-function-return-type": "warn",
+        "@typescript-eslint/explicit-function-return-type": [
+            "warn"
+        ],
         "@typescript-eslint/naming-convention": "warn",
         "@typescript-eslint/semi": [
             "warn",
             "never"
         ],
-        "curly": "warn",
+        "curly": [
+            "warn",
+            "multi"
+        ],
         "eqeqeq": "warn",
         "no-throw-literal": "warn",
         "semi": "off"

@@ -2,6 +2,8 @@ import { commands, Diagnostic, DiagnosticSeverity, Position, Range, Selection, T
 import { createDecorations } from './decorations'
 import { diagsColl } from './extension'
 
+// Special case: for deser ranges
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function newRange(rangeArr: any): Range {
   return new Range(rangeArr[0], rangeArr[1])
 }
@@ -14,12 +16,12 @@ export function changeText(editor: TextEditor, change: TextDocumentContentChange
   })
 }
 
-export function setSelection(editor: TextEditor, sel: Selection) {
+export function setSelection(editor: TextEditor, sel: Selection): void {
   editor.selection = new Selection(sel.anchor, sel.active)
   editor.revealRange(new Range(editor.selection.start, editor.selection.end), TextEditorRevealType.InCenter)
 }
 
-export async function closeDoc() {
+export async function closeDoc(): Promise<void> {
   const editor = await clearDoc()
   if (editor) await commands.executeCommand('workbench.action.closeActiveEditor')
 }
@@ -31,7 +33,7 @@ export async function closeAllDocs(): Promise<void> {
   }
 }
 
-export async function showDoc(content: string, langId: string) {
+export async function showDoc(content: string, langId: string): Promise<void> {
   let doc = (await clearDoc())?.document
   if (doc?.languageId !== langId) {
     await closeDoc()
@@ -49,12 +51,13 @@ export async function clearDoc(): Promise<TextEditor | undefined> {
   return editor
 }
 
-export function changeDiagnostics(ev: Diagnostic[]) {
+export function changeDiagnostics(ev: Diagnostic[]): void {
   const editor = window.activeTextEditor
 
   if (editor) {
     ev.forEach(diag => {
       diag.range = newRange(diag.range)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       diag.severity = DiagnosticSeverity[diag.severity] as any
     })
     diagsColl.set(editor.document.uri, ev)

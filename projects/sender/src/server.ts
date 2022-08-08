@@ -27,11 +27,11 @@ export class CodeScreenServer {
     this.app = app
   }
 
-  open(regFn: (ws: WebSocket) => void) {
+  open(regFn: (ws: WebSocket) => void): void {
     this.app.ws('/', regFn)
   }
 
-  close() {
+  close(): void {
     this.server.close()
   }
 }
