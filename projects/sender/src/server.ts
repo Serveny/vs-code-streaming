@@ -3,9 +3,9 @@ import expressWs from 'express-ws'
 import { Server } from 'http'
 import { WebSocket } from 'ws'
 import { $config } from './extension'
-import { engine } from 'express-handlebars'
 import path from 'path'
 import { toCSS } from 'cssjson'
+import { indexHTML } from './index-html'
 
 export class CodeScreenServer {
   app: expressWs.Application
@@ -20,14 +20,7 @@ export class CodeScreenServer {
       res.send(toCSS($config.styles))
     })
     app.use('/product.json', express.static(path.join(__dirname, './product.json')))
-    app.engine('handlebars', engine())
-    app.set('view engine', 'handlebars')
-    app.set('views', path.join(__dirname, './views'))
-    app.get('/', (_, res) =>
-      res.render('index.hbs', {
-        port: $config.port,
-      })
-    )
+    app.get('/', (_, res) => res.send(indexHTML($config.port)))
 
     this.server = app.listen($config.port)
     this.app = app

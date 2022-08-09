@@ -1,3 +1,5 @@
+export function indexHTML(port: number): string {
+  return `
 <html>
 
   <head>
@@ -21,16 +23,20 @@
     <script src='./web/vscode-web/dist/out/vs/loader.js'></script>
     <script src='./web/vscode-web/dist/out/vs/webPackagePaths.js'></script>
     <script>
-      Object.keys(self.webPackagePaths).map(function (key, index) { self.webPackagePaths[key] = `${window.location.origin}/web/vscode-web/dist/node_modules/${key}/${self.webPackagePaths[key]}`; });
-      require.config({ baseUrl: `${window.location.origin}/web/vscode-web/dist/out`, recordStats: true, trustedTypesPolicy: window.trustedTypes?.createPolicy('amdLoader', { createScriptURL(value) {
-      return value; }, }), paths: self.webPackagePaths, });
+     ${jsScript()} 
     </script>
     <script src='./web/vscode-web/dist/out/vs/workbench/workbench.web.main.nls.js'></script>
     <script src='./web/vscode-web/dist/out/vs/workbench/workbench.web.main.js'></script>
     <script src='./web/vscode-web/dist/out/vs/code/browser/workbench/workbench.js'></script>
     <script src='./web/web-customizer.js'></script>
     <script>
-      webCustomizer.start({{port}});
+      webCustomizer.start(${port});
     </script>
   </body>
 </html>
+`
+}
+
+function jsScript(): string {
+  return 'Object.keys(self.webPackagePaths).map(function (key, index) { self.webPackagePaths[key] = `${window.location.origin}/web/vscode-web/dist/node_modules/${key}/${self.webPackagePaths[key]}`; });require.config({ baseUrl: `${window.location.origin}/web/vscode-web/dist/out`, recordStats: true, trustedTypesPolicy: window.trustedTypes?.createPolicy("amdLoader", { createScriptURL(value) {    return value; }, }), paths: self.webPackagePaths, });'
+}

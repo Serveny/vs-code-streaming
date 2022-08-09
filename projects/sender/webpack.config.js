@@ -24,7 +24,7 @@ const extensionConfig = {
   },
   externals: {
     vscode: 'commonjs vscode',
-    express: 'express',
+    // express: 'express',
     bufferutil: 'bufferutil',
     'utf-8-validate': 'utf-8-validate',
   },
@@ -56,7 +56,7 @@ const extensionConfig = {
     new EventHooksPlugin({
       beforeCompile: () => {
         exec('cd ../../node_modules/vscode-web/dist/ && npm i', () => {
-          fs.copy('./src/views', './dist/views')
+          //fs.copy('./src/views', './dist/views')
           // fs.copy('./src/custom.css', './dist/web/custom.css')
           fs.copy('./src/product.json', './dist/product.json')
           fs.copy('../../node_modules/vscode-web', './dist/web/vscode-web')
