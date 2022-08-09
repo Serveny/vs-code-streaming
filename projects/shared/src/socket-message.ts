@@ -18,14 +18,18 @@ export interface Identification {
   type: WebSocketType
 }
 
-export interface TextOpenEvent {
-  content: string
-  languageId: string
-  diagnostics: Diagnostic[]
-  selections: Selection[]
+export function sendIdentification(ws: WebSocket, type: WebSocketType): void {
+  const msg: Identification = {
+    type: type,
+  }
+  ws.send(JSON.stringify(msg))
 }
 
-export interface Messages {
+/* ===========================================
+   Extension
+   =========================================== */
+
+export interface ExtensionMessages {
   changeCfg: ExtensionConfig
   openDoc: TextOpenEvent
   changeDoc: TextOpenEvent
@@ -35,16 +39,31 @@ export interface Messages {
   diagnosticsChange: Diagnostic[]
 }
 
-export type MessagesDict = { [K in keyof Messages]: Message<Messages[K]> }
+export type ExtensionMessagesDict = { [K in keyof ExtensionMessages]: Message<ExtensionMessages[K]> }
 
-export interface IMessage<T extends keyof Messages> {
+export interface IExtensionMessage<T extends keyof ExtensionMessages> {
   name: T
-  data: Messages[T]
+  data: ExtensionMessages[T]
 }
 
-export function sendIdentification(ws: WebSocket, type: WebSocketType): void {
-  const msg: Identification = {
-    type: type,
-  }
-  ws.send(JSON.stringify(msg))
+export interface TextOpenEvent {
+  content: string
+  languageId: string
+  diagnostics: Diagnostic[]
+  selections: Selection[]
+}
+
+/* ===========================================
+   Web Customizer 
+   =========================================== */
+
+export interface WebCustomizerMessages {
+  changeCss: void
+}
+
+export type WebCustomizerMessagesDict = { [K in keyof WebCustomizerMessages]: Message<WebCustomizerMessages[K]> }
+
+export interface IWebCustomizerMessage<T extends keyof WebCustomizerMessages> {
+  name: T
+  data: WebCustomizerMessages[T]
 }

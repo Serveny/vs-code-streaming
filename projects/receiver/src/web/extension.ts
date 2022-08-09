@@ -1,7 +1,7 @@
 import { ExtensionContext, languages, Selection, TextDocumentContentChangeEvent, TextDocumentContentProvider, window, workspace } from 'vscode'
-import { Message, Messages, MessagesDict, sendIdentification, TextOpenEvent, WebSocketType } from '../../../shared/src/socket-message'
+import { Message, ExtensionMessages, ExtensionMessagesDict, sendIdentification, TextOpenEvent, WebSocketType } from '../../../shared/src/socket-message'
 import { Constants, ExtensionConfig } from '../types'
-import { changeDiagnostics, changeText, clearDoc, closeAllDocs, setSelection, showDoc } from './cmds'
+import { changeDiagnostics, changeText, clearDoc, setSelection, showDoc } from './cmds'
 
 export let $config: ExtensionConfig | undefined
 let $socket: WebSocket | undefined
@@ -13,10 +13,7 @@ export function activate(ctx: ExtensionContext): void {
 }
 
 function activateConfig(ctx: ExtensionContext): void {
-  console.log('WORKSPACE: ', workspace)
-
   updateConfigAndEverything()
-
   ctx.subscriptions.push(
     workspace.onDidChangeConfiguration(ev => {
       if (ev.affectsConfiguration(Constants.settingsPrefix)) updateConfigAndEverything()
@@ -26,7 +23,7 @@ function activateConfig(ctx: ExtensionContext): void {
 
 async function updateConfigAndEverything(cfg?: ExtensionConfig): Promise<void> {
   $config = cfg ?? (workspace.getConfiguration().get(Constants.settingsPrefix) as ExtensionConfig)
-  await closeAllDocs()
+  // await closeAllDocs()
 }
 
 function openSocketConnection(): void {
@@ -47,7 +44,7 @@ const textProvider = new (class implements TextDocumentContentProvider {
 })()
 export const diagsColl = languages.createDiagnosticCollection('vscode-streaming-diags')
 
-const handlers: MessagesDict = {
+const handlers: ExtensionMessagesDict = {
   changeCfg: new Message(onChangeCfg),
   openDoc: new Message(onOpenDocument),
   changeDoc: new Message(onChangeDoc),
@@ -59,7 +56,7 @@ const handlers: MessagesDict = {
 
 function handle(json: string): void {
   const msg = JSON.parse(json)
-  const name = msg.name as keyof Messages
+  const name = msg.name as keyof ExtensionMessages
   handlers[name].invoke(msg.data)
 }
 
@@ -85,6 +82,5 @@ function onChangeSelection(ev: Selection[]): void {
 }
 
 function onChangeCfg(cfg: ExtensionConfig): void {
-  console.log('Change cfg: ', cfg)
   updateConfigAndEverything(cfg)
 }

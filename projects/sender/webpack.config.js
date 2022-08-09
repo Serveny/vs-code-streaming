@@ -57,7 +57,7 @@ const extensionConfig = {
       beforeCompile: () => {
         exec('cd ../../node_modules/vscode-web/dist/ && npm i', () => {
           fs.copy('./src/views', './dist/views')
-          fs.copy('./src/custom.css', './dist/web/custom.css')
+          // fs.copy('./src/custom.css', './dist/web/custom.css')
           fs.copy('./src/product.json', './dist/product.json')
           fs.copy('../../node_modules/vscode-web', './dist/web/vscode-web')
         })

@@ -38,6 +38,14 @@
       {
         "command": "codeStreamingScreen.stop",
         "title": "Stop Code Streaming Screen"
+      },
+      {
+        "command": "codeStreamingScreen.editStyles",
+        "title": "Edit Code Streaming Screen styles"
+      },
+      {
+        "command": "codeStreamingScreen.saveStyles",
+        "title": "Save active document to Code Streaming Screen styles"
       }
     ],
     "configuration": {
@@ -51,6 +59,21 @@
         "codeStreamingScreen.port": {
           "type": "number",
           "default": 1870,
+          "description": "Port for the local code streaming screen server"
+        },
+        "codeStreamingScreen.styles": {
+          "type": "object",
+          "default": {
+            "children": {
+              ".active-line-number": {
+                "children": {},
+                "attributes": {
+                  "font-weight": "bold"
+                }
+              }
+            },
+            "attributes": {}
+          },
           "description": "Port for the local code streaming screen server"
         }
       }

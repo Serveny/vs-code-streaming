@@ -1,9 +1,10 @@
-import { commands, ExtensionContext, window, workspace } from 'vscode'
+import { commands, ConfigurationTarget, ExtensionContext, window, workspace } from 'vscode'
 import { ExtensionEventRegister, WebCustomizerEventRegister } from './ev-register'
 import { Constants, ExtensionConfig } from '../../shared/src/types'
 import { CodeScreenServer } from './server'
 import { Identification, WebSocketType } from '../../shared/src/socket-message'
 import { RawData, WebSocket } from 'ws'
+import { toCSS, toJSON } from 'cssjson'
 
 export let $config: ExtensionConfig
 let server: CodeScreenServer | undefined
@@ -33,6 +34,8 @@ function registerCommands(ctx: ExtensionContext): void {
   subs.push(commands.registerCommand(`${Constants.settingsPrefix}.start`, start))
   subs.push(commands.registerCommand(`${Constants.settingsPrefix}.restart`, restart))
   subs.push(commands.registerCommand(`${Constants.settingsPrefix}.stop`, stop))
+  subs.push(commands.registerCommand(`${Constants.settingsPrefix}.editStyles`, editStyles))
+  subs.push(commands.registerCommand(`${Constants.settingsPrefix}.saveStyles`, saveStyles))
 }
 
 function start(): void {
@@ -61,6 +64,26 @@ function stop(): void {
 function restart(): void {
   stop()
   start()
+}
+
+async function editStyles(): Promise<void> {
+  const doc = await workspace.openTextDocument({
+    language: 'css',
+    content: toCSS($config.styles),
+  })
+  window.showTextDocument(doc)
+}
+
+async function saveStyles(): Promise<void> {
+  const doc = window.activeTextEditor?.document
+  if (doc?.languageId === 'css')
+    try {
+      const json = toJSON(doc.getText())
+      await workspace.getConfiguration().update(`${Constants.settingsPrefix}.styles`, json, ConfigurationTarget.Global)
+    } catch (err: unknown) {
+      window.showErrorMessage(`error updating styles config: ${err}`)
+    }
+  else window.showErrorMessage('Active document is no CSS-file.')
 }
 
 export function deactivate(): void {

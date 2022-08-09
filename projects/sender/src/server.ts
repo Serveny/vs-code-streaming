@@ -5,6 +5,7 @@ import { WebSocket } from 'ws'
 import { $config } from './extension'
 import { engine } from 'express-handlebars'
 import path from 'path'
+import { toCSS } from 'cssjson'
 
 export class CodeScreenServer {
   app: expressWs.Application
@@ -13,6 +14,11 @@ export class CodeScreenServer {
   constructor() {
     const { app } = expressWs(express())
     app.use('/web', express.static(path.join(__dirname, './web')))
+    app.use('/custom.css', (_, res) => {
+      res.attachment('custom.css')
+      res.type('css')
+      res.send(toCSS($config.styles))
+    })
     app.use('/product.json', express.static(path.join(__dirname, './product.json')))
     app.engine('handlebars', engine())
     app.set('view engine', 'handlebars')

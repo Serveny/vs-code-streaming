@@ -1,20 +1,10 @@
 import { ConfigurationChangeEvent, DiagnosticChangeEvent, Disposable, languages, TextDocumentChangeEvent, TextEditor, TextEditorSelectionChangeEvent, window, workspace } from 'vscode'
 import { WebSocket } from 'ws'
-import { IMessage, Messages } from '../../shared/src/socket-message'
+import { ExtensionMessages, IExtensionMessage, IWebCustomizerMessage, WebCustomizerMessages } from '../../shared/src/socket-message'
 import { Constants, ExtensionConfig } from '../../shared/src/types'
 
-abstract class EventRegister {
-  constructor(private ws: WebSocket) {}
-
-  send<T extends keyof Messages>(msg: IMessage<T>): void {
-    this.ws.send(JSON.stringify(msg))
-  }
-}
-
-export class ExtensionEventRegister extends EventRegister {
-  constructor(ws: WebSocket) {
-    console.log('Register extension events now', ws)
-    super(ws)
+export class ExtensionEventRegister {
+  constructor(private ws: WebSocket) {
     const dispo: Disposable[] = [
       workspace.onDidChangeConfiguration(this.sendChangeCfg.bind(this)),
       workspace.onDidChangeTextDocument(this.sendChangeText.bind(this)),
@@ -26,12 +16,9 @@ export class ExtensionEventRegister extends EventRegister {
     this.sendOpenActiveDoc()
     console.log('events registered')
   }
-  sendChangeCfg(ev: ConfigurationChangeEvent): void {
-    if (ev.affectsConfiguration(Constants.settingsPrefix))
-      this.send({
-        name: 'changeCfg',
-        data: workspace.getConfiguration().get(Constants.settingsPrefix) as ExtensionConfig,
-      })
+
+  send<T extends keyof ExtensionMessages>(msg: IExtensionMessage<T>): void {
+    this.ws.send(JSON.stringify(msg))
   }
 
   onChangeActiveDoc(editor?: TextEditor): void {
@@ -67,7 +54,6 @@ export class ExtensionEventRegister extends EventRegister {
   }
 
   sendChangeCursor(ev: TextEditorSelectionChangeEvent): void {
-    console.log('THIS', this)
     this.send({
       name: 'selectionChange',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -92,11 +78,34 @@ export class ExtensionEventRegister extends EventRegister {
     const editor = window.activeTextEditor
     if (editor) this.sendOpenDoc(editor)
   }
+
+  sendChangeCfg(ev: ConfigurationChangeEvent): void {
+    if (ev.affectsConfiguration(Constants.settingsPrefix)) this.sendCfg()
+  }
+
+  sendCfg(): void {
+    this.send({
+      name: 'changeCfg',
+      data: workspace.getConfiguration().get(Constants.settingsPrefix) as ExtensionConfig,
+    })
+  }
 }
 
-export class WebCustomizerEventRegister extends EventRegister {
-  constructor(ws: WebSocket) {
-    console.log('register web customizer events now', ws)
-    super(ws)
+export class WebCustomizerEventRegister {
+  constructor(private ws: WebSocket) {
+    const dispo: Disposable[] = [workspace.onDidChangeConfiguration(this.sendChangeCss.bind(this))]
+    ws.on('close', () => dispo.forEach(item => item.dispose()))
+  }
+
+  send<T extends keyof WebCustomizerMessages>(msg: IWebCustomizerMessage<T>): void {
+    this.ws.send(JSON.stringify(msg))
+  }
+
+  sendChangeCss(ev: ConfigurationChangeEvent): void {
+    if (ev.affectsConfiguration(Constants.settingsPrefix))
+      this.send({
+        name: 'changeCss',
+        data: undefined,
+      })
   }
 }
