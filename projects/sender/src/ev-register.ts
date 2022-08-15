@@ -3,6 +3,8 @@ import { WebSocket } from 'ws'
 import { ExtensionMessages, IExtensionMessage, IWebCustomizerMessage, WebCustomizerMessages } from '../../shared/src/socket-message'
 import { Constants, ExtensionConfig } from '../../shared/src/types'
 
+const allowedSchemes: string[] = ['file', 'untitled', 'vscode-userdata']
+
 export class ExtensionEventRegister {
   constructor(private ws: WebSocket) {
     const dispo: Disposable[] = [
@@ -28,7 +30,8 @@ export class ExtensionEventRegister {
 
   sendOpenDoc(editor: TextEditor): void {
     const doc = editor.document
-    if (doc.uri.scheme === 'file' || doc.uri.scheme === 'untitled')
+    console.log('OpenDoc: ', doc.uri.scheme, doc.fileName)
+    if (allowedSchemes.includes(doc.uri.scheme))
       setTimeout(
         () =>
           this.send({

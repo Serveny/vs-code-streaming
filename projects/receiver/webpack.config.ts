@@ -1,17 +1,11 @@
-//@ts-check
 'use strict'
 
-const EventHooksPlugin = require('event-hooks-webpack-plugin')
-const fs = require('fs-extra')
+import EventHooksPlugin from 'event-hooks-webpack-plugin'
+import fs from 'fs-extra'
+import path from 'path'
+import webpack, { Configuration } from 'webpack'
 
-//@ts-check
-/** @typedef {import('webpack').Configuration} WebpackConfig **/
-
-const path = require('path')
-const webpack = require('webpack')
-
-/** @type WebpackConfig */
-const webExtensionConfig = {
+const webExtensionConfig: Configuration = {
   mode: 'none', // this leaves the source code as close as possible to the original (when packaging we set this to 'production')
   target: 'webworker', // extensions run in a webworker context
   entry: {
@@ -53,9 +47,8 @@ const webExtensionConfig = {
     new webpack.ProvidePlugin({
       process: 'process/browser', // provide a shim for the global `process` variable
     }),
-    // @ts-ignore
     new EventHooksPlugin({
-      done: () => {
+      done: (): void => {
         fs.copy('./dist/web/extension.js', '../sender/dist/web/receiver/dist/web/extension.js')
         fs.copy('./package.json', '../sender/dist/web/receiver/package.json')
         fs.copy('./package.nls.json', '../sender/dist/web/receiver/package.nls.json')

@@ -1,5 +1,6 @@
 export function indexHTML(port: number): string {
-  return `
+  return /*html*/ `
+<!DOCTYPE html>
 <html>
 
   <head>
@@ -8,14 +9,13 @@ export function indexHTML(port: number): string {
     <meta name='mobile-web-app-capable' content='yes' />
     <meta name='apple-mobile-web-app-capable' content='yes' />
     <meta name='apple-mobile-web-app-title' content='Code' />
-    <link rel='apple-touch-icon' href='/code-192.png' />
     <!-- Disable pinch zooming -->
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' />
     <!-- Workbench Icon/Manifest/CSS -->
-    <link rel='icon' href='/favicon.ico' type='image/x-icon' />
-    <link rel='manifest' href='/manifest.json' />
+    <link rel='icon' href='web/favicon.ico' type='image/x-icon' />
+    <link rel='manifest' href='web/manifest.json' />
     <link data-name='vs/workbench/workbench.web.main' rel='stylesheet' href='./web/vscode-web/dist/out/vs/workbench/workbench.web.main.css' />
-    <link data-name='custom-css' rel='stylesheet' href='./custom.css' />
+    <link data-name='custom-css' rel='stylesheet' href='web/custom.css' />
   </head>
 
   <body aria-label=''>

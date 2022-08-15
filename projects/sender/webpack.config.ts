@@ -1,18 +1,10 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-//@ts-check
+import { Configuration } from 'webpack'
+import path from 'path'
+import EventHooksPlugin from 'event-hooks-webpack-plugin'
+import { exec } from 'child_process'
+import fs from 'fs-extra'
 
-'use strict'
-
-const path = require('path')
-const EventHooksPlugin = require('event-hooks-webpack-plugin')
-const { exec } = require('child_process')
-const fs = require('fs-extra')
-
-//@ts-check
-/** @typedef {import('webpack').Configuration} WebpackConfig **/
-
-/** @type WebpackConfig */
-const extensionConfig = {
+const extensionConfig: Configuration = {
   target: 'node',
   mode: 'none',
 
@@ -24,8 +16,9 @@ const extensionConfig = {
   },
   externals: {
     vscode: 'commonjs vscode',
-    // express: 'express',
+    express: 'express',
     bufferutil: 'bufferutil',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     'utf-8-validate': 'utf-8-validate',
   },
   resolve: {
@@ -52,12 +45,12 @@ const extensionConfig = {
     level: 'log', // enables logging required for problem matchers
   },
   plugins: [
-    // @ts-ignore
     new EventHooksPlugin({
-      beforeCompile: () => {
+      beforeCompile: (): void => {
         exec('cd ../../node_modules/vscode-web/dist/ && npm i', () => {
           fs.copy('../../node_modules/vscode-web', './dist/web/vscode-web')
-          fs.copy('./src/product.json', './dist/product.json')
+          fs.copy('./public/product.json', './dist/web/product.json')
+          fs.copy('./public/img/favicon.ico', './dist/web/favicon.ico')
         })
       },
     }),

@@ -14,12 +14,12 @@ export class CodeScreenServer {
   constructor() {
     const { app } = expressWs(express())
     app.use('/web', express.static(path.join(__dirname, './web')))
-    app.use('/custom.css', (_, res) => {
+    app.use('/web/custom.css', (_, res) => {
       res.attachment('custom.css')
       res.type('css')
       res.send(toCSS($config.styles))
     })
-    app.use('/product.json', express.static(path.join(__dirname, './product.json')))
+    app.use('/product.json', express.static(path.join(__dirname, './web/product.json')))
     app.get('/', (_, res) => res.send(indexHTML($config.port)))
 
     this.server = app.listen($config.port)

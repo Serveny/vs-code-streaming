@@ -16,7 +16,7 @@
     "streaming",
     "web"
   ],
-  "icon": "images/logo128.png",
+  "icon": "img/logo128.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/Serveny/vs-code-streaming"
