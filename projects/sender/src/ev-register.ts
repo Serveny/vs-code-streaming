@@ -28,7 +28,7 @@ export class ExtensionEventRegister {
 
   sendOpenDoc(editor: TextEditor): void {
     const doc = editor.document
-    if (doc.uri.scheme === 'file')
+    if (doc.uri.scheme === 'file' || doc.uri.scheme === 'untitled')
       setTimeout(
         () =>
           this.send({

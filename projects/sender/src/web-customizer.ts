@@ -18,6 +18,7 @@ function onChangeCss(): void {
 }
 
 export function start(port: number): void {
+  resetTempDb()
   openSocketConnection(port)
 }
 
@@ -27,4 +28,8 @@ function openSocketConnection(port: number): void {
   ws.onopen = (): void => sendIdentification(ws, WebSocketType.webCustomizer)
   ws.onmessage = (msg): void => handle(msg.data)
   ws.onclose = (): NodeJS.Timeout => setTimeout(() => openSocketConnection(port), 1000)
+}
+
+function resetTempDb(): void {
+  localStorage.removeItem('vscode-web-db')
 }
