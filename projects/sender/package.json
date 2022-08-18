@@ -1,7 +1,7 @@
 {
   "name": "code-streaming-screen",
   "displayName": "Code Streaming Screen",
-  "description": "Mirrors the active editor in a browser window that can be used as a browser source for streaming software. This allows a display specifically adapted to the stream without having to change the display for the programmer/streamer.",
+  "description": "Mirrors the active editor in a browser window that can be used as a browser source for streaming software.",
   "version": "0.0.1",
   "publisher": "Serveny",
   "license": "MIT",
@@ -16,7 +16,7 @@
     "streaming",
     "web"
   ],
-  "icon": "img/logo128.png",
+  "icon": "public/img/logo128.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/Serveny/vs-code-streaming"
