@@ -7,7 +7,6 @@ import fs from 'fs-extra'
 const extensionConfig: Configuration = {
   target: 'node',
   mode: 'none',
-
   entry: './src/extension.ts',
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -16,10 +15,10 @@ const extensionConfig: Configuration = {
   },
   externals: {
     vscode: 'commonjs vscode',
-    express: 'express',
-    bufferutil: 'bufferutil',
+    // express: 'express',
+    // bufferutil: 'bufferutil',
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    'utf-8-validate': 'utf-8-validate',
+    // 'utf-8-validate': 'utf-8-validate',
   },
   resolve: {
     extensions: ['.ts', '.js'],
