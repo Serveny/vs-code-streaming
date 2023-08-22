@@ -6,7 +6,7 @@
   "publisher": "Serveny",
   "license": "MIT",
   "engines": {
-    "vscode": "^1.69.0"
+    "vscode": "^1.81.0"
   },
   "categories": [
     "Other"
