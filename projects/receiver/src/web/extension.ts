@@ -28,7 +28,7 @@ async function updateConfigAndEverything(cfg?: ExtensionConfig): Promise<void> {
 
 function openSocketConnection(): void {
   if (!$config || $socket) return
-  console.log('Open WebSocket Connection on port', $config?.port)
+  console.info('[Code Streaming] Open WebSocket Connection on port', $config?.port)
   const ws = new WebSocket(`ws://localhost:${$config.port}`)
   ws.onopen = (): void => sendIdentification(ws, WebSocketType.extension)
   ws.onmessage = (msg): void => handle(msg.data)
